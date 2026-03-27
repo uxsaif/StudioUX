@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1366" />
+<title>Survey Questions — Table View Preview</title>
+<style>
+/* ── Tokens (from _tokens.scss) ────────────────────── */
+:root {
+  --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --color-primary: #373737;
+  --color-secondary: #616161;
+  --color-tertiary: #999999;
+  --color-text-light: #707276;
+  --border-default: #dedede;
+  --border-table: #cccccc;
+  --surface-primary: #ffffff;
+  --surface-secondary: #f5f5f5;
+  --gray-100: #f5f5f5;
+  --gray-800: #373737;
+  --radius-sm: 4px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --nav-active: #151921;
+  --blue-btn: #2563eb;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-family); color: var(--color-primary); background: var(--surface-primary); }
+.sq-page { display: flex; flex-direction: column; height: 100vh; overflow: auto; }
+.sq-page::-webkit-scrollbar { width: 6px; }
+.sq-page::-webkit-scrollbar-track { background: transparent; }
+.sq-page::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
+.sq-page.is-scrolling::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); }
+.sq-page.is-scrolling::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
+
+/* ── Brand bar (Figma 38624:146889) ────────────────── */
+.sq-page__brand-bar {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 4px 0; background: var(--surface-primary);
+  border-bottom: 1px solid #2d6df6;
+  box-shadow: 0 6px 3px 0 rgba(0,0,0,0.05);
+  position: relative; z-index: 10;
+}
+.sq-page__brand-content {
+  display: flex; align-items: center; width: 100%;
+  padding-left: var(--space-4); padding-right: var(--space-2);
+}
+.sq-page__brand-logo-group {
+  display: flex; align-items: center; gap: var(--space-2); flex: 1; min-width: 0;
+}
+.sq-page__brand-niq { width: 46.86px; height: 20px; flex-shrink: 0; }
+.sq-page__brand-bases { width: 72.5px; height: 18.3px; flex-shrink: 0; }
+.sq-page__brand-studio { width: 69.08px; height: 18.2px; flex-shrink: 0; }
+.sq-page__brand-actions {
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.sq-page__brand-icon-btn {
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; border-radius: 3px; cursor: pointer; padding: 8px;
+}
+.sq-page__brand-icon-btn:hover { background: var(--surface-secondary); }
+.sq-page__brand-divider {
+  width: 1px; height: 20px; background: var(--border-default); flex-shrink: 0;
+}
+.sq-page__brand-hello {
+  display: flex; align-items: center; gap: var(--space-1);
+  padding: 0 var(--space-1); height: 16px; font-size: 13px; line-height: 16px;
+}
+.sq-page__brand-hello-text { color: var(--color-text-light); font-weight: 400; }
+.sq-page__brand-hello-user { color: var(--color-primary); font-weight: 700; white-space: nowrap; }
+.sq-page__brand-chevron { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ── Toolbar (64px) ────────────────────────────────── */
+.sq-page__toolbar {
+  display: flex; align-items: center;
+  height: 64px; gap: 32px;
+  border-bottom: 1px solid var(--border-default);
+}
+.sq-page__toolbar-left { display: flex; align-items: center; flex-shrink: 0; }
+.sq-page__toolbar-home-btn {
+  width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+  background: var(--border-default); border: none; cursor: pointer; flex-shrink: 0;
+}
+.sq-page__project-name { font-size: 24px; font-weight: 700; text-transform: uppercase; line-height: 24px; white-space: nowrap; margin-left: 16px; }
+.sq-page__toolbar-icons { display: flex; align-items: center; height: 100%; gap: 20px; }
+.sq-page__toolbar-icon-group { display: flex; align-items: stretch; height: 100%; }
+.sq-page__toolbar-tab {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 16px; height: 100%; background: none; border: none;
+  border-bottom: 2px solid transparent; cursor: pointer;
+}
+.sq-page__toolbar-tab:hover { background: rgba(0,0,0,0.04); }
+.sq-page__toolbar-tab--active { border-bottom-color: #151921; }
+.sq-page__toolbar-divider {
+  width: 1px; height: 33px; background: var(--border-default); flex-shrink: 0; align-self: center;
+}
+
+/* ── Icon button (shared) ──────────────────────────── */
+.sq-page__icon-btn {
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; border-radius: var(--radius-sm); cursor: pointer;
+}
+.sq-page__icon-btn:hover { background: var(--gray-100); }
+
+/* ── Nav tabs (52px) ───────────────────────────────── */
+.sq-page__nav {
+  display: flex; align-items: stretch; height: 52px; padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border-default); gap: var(--space-5);
+  position: sticky; top: 0; z-index: 9; background: #ffffff;
+}
+.sq-page__nav-tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 0 var(--space-1); font-family: var(--font-family);
+  font-size: 13px; font-weight: 500; color: #2d6df6;
+  cursor: pointer; display: flex; align-items: center;
+}
+.sq-page__nav-tab:hover { color: var(--color-primary); }
+.sq-page__nav-tab--active {
+  color: var(--color-primary); font-weight: 700;
+  border-bottom-color: var(--color-primary);
+}
+
+/* ── Body ──────────────────────────────────────────── */
+.sq-page__body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* ── Deliverable toolbar (52px) ────────────────────── */
+.sq-page__del-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 52px; padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+  position: sticky; top: 52px; z-index: 8; background: #ffffff;
+}
+.sq-page__del-toolbar-left { display: flex; align-items: center; gap: var(--space-2); }
+.sq-page__del-title { font-size: 18px; font-weight: 400; line-height: 18px; }
+.sq-page__del-toolbar-right { display: flex; align-items: center; gap: var(--space-1); }
+.sq-page__add-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: var(--blue-btn); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.sq-page__add-btn:hover { background: #1d4ed8; }
+
+/* ── Filters bar (44px) ────────────────────────────── */
+.filters-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 44px; padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+  position: sticky; top: 104px; z-index: 7; background: #ffffff;
+}
+.filters-bar__left { display: flex; align-items: center; gap: var(--space-4); flex: 1; }
+.filters-bar__data-driver, .filters-bar__filters {
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.filters-bar__link {
+  font-size: 11px; line-height: 11px; color: var(--color-primary);
+  text-decoration: underline; cursor: pointer; padding: var(--space-1) 0;
+}
+.filters-bar__link:hover { color: var(--color-secondary); }
+.filters-bar__divider {
+  width: 1px; height: 16px; background: var(--border-default); flex-shrink: 0;
+}
+.filters-bar__right { display: flex; align-items: center; gap: var(--space-2); }
+.filters-bar__chart-types { display: flex; gap: var(--space-1); }
+.filters-bar__chart-btn {
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border: none; border-radius: 3px; background: none; color: var(--color-text-light); cursor: pointer;
+}
+.filters-bar__chart-btn:hover { background: var(--gray-100); }
+.filters-bar__chart-btn--active { background: var(--nav-active); color: #fff; }
+.filters-bar__chart-btn--active:hover { background: var(--nav-active); }
+
+/* ── Chart Options Drawer ──────────────────────────── */
+.chart-options-overlay {
+  display: none; position: fixed; right: 0; bottom: 0;
+  width: 261px; z-index: 50;
+  transform: translateX(100%); transition: transform 0.25s ease;
+}
+.chart-options-overlay--open { display: flex; transform: translateX(0); }
+
+.chart-options-drawer {
+  width: 261px; height: 100%; display: flex; flex-direction: column;
+  background: #fff; border-left: 1px solid var(--border-default);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.08);
+}
+
+.chart-options__header {
+  height: 40px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 8px; flex-shrink: 0;
+}
+.chart-options__title {
+  font-size: 16px; font-weight: 400; line-height: 16px; color: var(--color-primary);
+}
+.chart-options__close {
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; border-radius: 3px;
+}
+.chart-options__close:hover { background: var(--gray-100); }
+
+.chart-options__body {
+  flex: 1; overflow-y: auto; overflow-x: hidden; border-top: 1px solid var(--border-default);
+}
+
+.chart-options__section {
+  border-bottom: 1px solid var(--border-default);
+}
+.chart-options__section-title {
+  height: 40px; display: flex; align-items: center; padding: 0 8px;
+  font-size: 13px; font-weight: 400; line-height: 13px;
+  color: var(--color-tertiary); text-transform: uppercase; letter-spacing: 0;
+}
+.chart-options__sub-header {
+  height: 44px; display: flex; align-items: center; padding: 0 8px;
+  font-size: 13px; font-weight: 700; line-height: 13px; color: var(--color-text-light);
+}
+.chart-options__item {
+  height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 8px;
+  font-size: 13px; line-height: 13px; color: var(--color-primary); cursor: pointer;
+}
+.chart-options__item--indent { padding-left: 32px; }
+.chart-options__item input[type="radio"],
+.chart-options__item input[type="checkbox"] {
+  width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--nav-active);
+}
+.chart-options__item label { cursor: pointer; }
+.chart-options__section-content { padding-bottom: 16px; }
+
+/* ── Deliverable container ─────────────────────────── */
+.sq-page__deliverable { flex: 1; display: flex; flex-direction: column; padding: 0 var(--space-5) 40px; }
+.sq-page__question-selector { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4) 0 32px; }
+.sq-page__question-select { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; }
+.sq-page__question-title { font-size: 16px; line-height: 16px; }
+.sq-page__question-subtitle { font-size: 13px; line-height: 13px; color: var(--color-text-light); }
+
+/* ── Data table ────────────────────────────────────── */
+.data-table { display: flex; gap: 1px; align-items: stretch; width: 100%; }
+.data-table__label-col {
+  display: flex; flex-direction: column; min-width: 380px; max-width: 520px; flex-shrink: 0;
+}
+.data-table__data-col {
+  display: flex; flex-direction: column; flex: 1 0 0; min-width: 0;
+  border-left: 1px solid var(--border-table);
+}
+
+/* Header cells */
+.data-table__header-cell {
+  display: flex; align-items: stretch; justify-content: flex-end;
+  padding: var(--space-3) var(--space-2) var(--space-3) var(--space-4);
+  background: var(--surface-primary);
+  border-bottom: 2px solid var(--border-table);
+}
+.data-table__header-cell--empty { min-height: 36px; }
+.data-table__header-content { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); }
+.data-table__badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 16px; padding: 2px var(--space-1); border-radius: var(--radius-sm);
+  background: var(--gray-800); color: #fff; font-size: 11px; font-weight: 700; line-height: 11px;
+}
+.data-table__concept-name { font-size: 13px; font-weight: 700; text-align: right; line-height: 16px; }
+.data-table__sample-size { font-size: 13px; color: var(--color-tertiary); line-height: 24px; margin-top: auto; }
+
+/* Data cells */
+.data-table__cell {
+  display: flex; align-items: center; height: 36px;
+  padding: var(--space-3) var(--space-2) var(--space-3) var(--space-4);
+  font-size: 13px; line-height: 13px; position: relative; background: var(--surface-primary);
+}
+.data-table__cell::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px; background: var(--border-table);
+}
+.data-table__cell--label { padding: var(--space-3) var(--space-4) var(--space-3) var(--space-2); justify-content: flex-start; }
+.data-table__cell--value { justify-content: flex-end; text-align: right; white-space: nowrap; }
+.data-table__cell--summary-label { justify-content: flex-end; text-align: right; }
+.data-table__cell--spacer { height: 36px; background: transparent; }
+.data-table__cell--spacer::after { background: var(--border-table); }
+.data-table__sig { margin-right: 4px; color: var(--color-tertiary); }
+
+/* ── Bar Chart View ────────────────────────────────── */
+.bar-chart-view { display: none; width: 100%; }
+.bar-chart-view--active { display: flex; }
+.bar-chart-cards {
+  display: flex; width: 100%;
+  background: var(--surface-primary);
+}
+.bar-chart-card {
+  flex: 1 0 0; min-width: 0; display: flex; flex-direction: column;
+  gap: var(--space-4); overflow: visible;
+}
+.bar-chart-card:last-child {
+  overflow: hidden;
+}
+
+/* Card title */
+.bar-chart-card__title {
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding-right: var(--space-2);
+}
+.bar-chart-card__title-top {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+}
+.bar-chart-card__badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; padding: 2px var(--space-1);
+  border-radius: var(--radius-sm); background: var(--gray-800);
+  color: #fff; font-size: 11px; font-weight: 700; line-height: 11px;
+  flex-shrink: 0;
+}
+.bar-chart-card__name {
+  font-size: 13px; font-weight: 700; line-height: 16px;
+  color: var(--color-primary); flex: 1; min-width: 0;
+}
+.bar-chart-card__sample {
+  font-size: 13px; line-height: 13px; color: var(--color-tertiary);
+  margin-top: var(--space-1);
+}
+
+/* Range scale */
+.bar-chart-card__scale-wrap { padding: 15px 34px 0 0; }
+.bar-chart-card__scale {
+  position: relative; height: 8px;
+  border-bottom: 1px solid var(--border-default);
+  border-left: 1px solid var(--border-default);
+  border-right: 1px solid var(--border-default);
+}
+.bar-chart-card__scale-label {
+  position: absolute; font-size: 11px; line-height: 11px;
+  color: #cccccc; top: -15px;
+}
+.bar-chart-card__scale-label--min { left: -2px; }
+.bar-chart-card__scale-label--max { right: -2px; text-align: right; }
+
+/* Bar rows */
+.bar-chart-row {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-4) 0 var(--space-2) 0;
+  border-bottom: 1px solid var(--border-default);
+  overflow: visible;
+}
+.bar-chart-row__label {
+  font-size: 16px; line-height: 16px; color: var(--color-primary);
+  white-space: nowrap; overflow: visible;
+}
+.bar-chart-row__bar-wrap {
+  display: flex; gap: var(--space-2); align-items: stretch; height: 24px;
+  padding-right: 34px;
+}
+.bar-chart-row__bar-frame {
+  flex: 1 0 0; min-width: 0; display: flex; align-items: center;
+}
+.bar-chart-row__bar {
+  height: 100%; background: #675895; border-radius: 0;
+  min-width: 2px; transition: width 0.3s ease;
+}
+.bar-chart-row__value {
+  width: 61px; flex-shrink: 0; display: flex; align-items: center;
+  font-size: 13px; font-weight: 700; line-height: 13px;
+  color: #707276; white-space: nowrap;
+}
+.bar-chart-row__sig {
+  font-size: 11px; line-height: 11px; color: var(--color-tertiary);
+  height: 12px;
+}
+
+/* ── Vertical Bar Chart View ───────────────────────── */
+.vbar-view { display: none; width: 100%; flex-direction: column; }
+.vbar-view--active { display: flex; }
+
+.vbar-header {
+  display: flex; width: 100%; align-items: stretch;
+}
+.vbar-title {
+  flex: 1 0 0; min-width: 0; display: flex; flex-direction: column;
+  padding: 0 var(--space-3) 0 0;
+}
+.vbar-title__top { display: flex; gap: var(--space-2); align-items: flex-start; }
+.vbar-title__badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; padding: 2px var(--space-1);
+  border-radius: var(--radius-sm); background: var(--gray-800);
+  color: #fff; font-size: 11px; font-weight: 700; line-height: 11px;
+  flex-shrink: 0;
+}
+.vbar-title__name {
+  font-size: 13px; font-weight: 700; line-height: 16px;
+  color: var(--color-primary);
+}
+.vbar-title__sample {
+  font-size: 13px; line-height: 13px; color: var(--color-tertiary);
+  margin-top: var(--space-1);
+}
+.vbar-divider-header {
+  width: 32px; flex-shrink: 0; display: flex; align-items: stretch; justify-content: center;
+}
+.vbar-divider-header__line {
+  width: 1px; background: var(--border-default); align-self: stretch;
+}
+
+.vbar-body {
+  display: flex; width: 100%; align-items: stretch; margin-top: 0;
+  position: relative;
+}
+.vbar-nav {
+  width: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none; font-size: 18px; color: var(--color-primary);
+}
+.vbar-nav:hover { color: var(--color-secondary); }
+.vbar-nav--disabled { opacity: 0.3; pointer-events: none; }
+
+.vbar-scale {
+  position: absolute; left: 16px; top: 0; bottom: 0;
+  width: 31px; display: flex; flex-direction: column;
+  align-items: flex-end; padding-top: 21px;
+}
+.vbar-scale__track {
+  width: 8px; flex: 1; position: relative;
+  border-left: 1px solid var(--border-default);
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+}
+.vbar-scale__label {
+  position: absolute; right: 12px; font-size: 11px; line-height: 11px; color: #cccccc;
+}
+.vbar-scale__label--max { top: -6px; }
+.vbar-scale__label--min { bottom: -6px; }
+
+.vbar-card {
+  flex: 1 0 0; min-width: 0; display: flex; flex-direction: column; gap: 4px;
+}
+.vbar-card__cols {
+  display: flex;
+  padding-left: 64px; padding-right: 12px;
+}
+.vbar-col {
+  flex: 1 0 0%;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.vbar-col__bars {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  justify-content: flex-end; height: 221px; width: 28px;
+}
+.vbar-col__sig {
+  font-size: 11px; line-height: 11px; color: var(--color-tertiary);
+  white-space: nowrap; text-align: center; width: 100%;
+}
+.vbar-col__value {
+  font-size: 13px; font-weight: 700; line-height: 13px;
+  color: #707276; white-space: nowrap; text-align: center; width: 100%;
+}
+.vbar-col__bar {
+  width: 100%; background: #675895; min-height: 2px;
+  transition: height 0.3s ease;
+}
+.vbar-label-cell {
+  width: 89.8px; height: 89.8px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: visible;
+}
+.vbar-label-cell__text {
+  transform: rotate(-45deg);
+  width: 105px; height: 22px; overflow: hidden; text-overflow: ellipsis;
+  font-size: 11px; line-height: 11px; color: var(--color-primary);
+  text-align: right; flex-shrink: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.vbar-divider {
+  width: 1px; flex-shrink: 0; background: var(--border-default);
+  margin: 0 15.5px;
+}
+</style>
+</head>
+<body>
+<div class="sq-page">
+
+  <!-- Brand bar (Figma 38624:146889) -->
+  <div class="sq-page__brand-bar">
+    <div class="sq-page__brand-content">
+      <div class="sq-page__brand-logo-group">
+        <img class="sq-page__brand-niq" src="https://www.figma.com/api/mcp/asset/2e35d055-844c-477e-b628-a4a0d94698da" alt="NIQ" />
+        <img class="sq-page__brand-bases" src="https://www.figma.com/api/mcp/asset/d3898169-6bce-4261-9448-7b43ef389ab6" alt="BASES" />
+        <img class="sq-page__brand-studio" src="https://www.figma.com/api/mcp/asset/62f9e511-bd08-4219-8060-35b29dd08749" alt="Studio" />
+      </div>
+      <div class="sq-page__brand-actions">
+        <button class="sq-page__brand-icon-btn" aria-label="Comments">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h12v9H5l-3 3V2z" stroke="#000" stroke-width="1.2"/></svg>
+        </button>
+        <span class="sq-page__brand-divider"></span>
+        <div class="sq-page__brand-hello">
+          <span class="sq-page__brand-hello-text">Hello</span>
+          <span class="sq-page__brand-hello-user">User</span>
+          <svg class="sq-page__brand-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#373737" stroke-width="1.2"/></svg>
+        </div>
+        <span class="sq-page__brand-divider"></span>
+        <button class="sq-page__brand-icon-btn" aria-label="Help">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#000" stroke-width="1.2"/><path d="M6 6a2 2 0 113 1.94V9" stroke="#000" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.5" fill="#000"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main toolbar (Figma 38703:146521) -->
+  <div class="sq-page__toolbar">
+    <div class="sq-page__toolbar-left">
+      <button class="sq-page__toolbar-home-btn" aria-label="Home">
+        <img src="https://www.figma.com/api/mcp/asset/c3790d42-afb7-410a-accc-b2a59476095b" alt="" width="24" height="24" />
+      </button>
+      <span class="sq-page__project-name">PROJECT NAME</span>
+    </div>
+    <div class="sq-page__toolbar-icons">
+      <!-- Group 1: IPFAR icons -->
+      <div class="sq-page__toolbar-icon-group">
+        <button class="sq-page__toolbar-tab" aria-label="Alerts">
+          <img src="https://www.figma.com/api/mcp/asset/a2d14ca5-ad80-4e1a-9c18-14eacd0d5c27" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Forecast">
+          <img src="https://www.figma.com/api/mcp/asset/862e44c3-6b0c-4ebb-8ead-dff6a08dfad0" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Surveys">
+          <img src="https://www.figma.com/api/mcp/asset/99fcff8e-7ab5-4975-a18e-6fe77ad0a992" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Modules">
+          <img src="https://www.figma.com/api/mcp/asset/4923c7cc-2f0a-45e7-bd12-7637c6976024" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Reports">
+          <img src="https://www.figma.com/api/mcp/asset/994e0c9b-3bf9-461d-8248-a80a8b68ef6e" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab sq-page__toolbar-tab--active" aria-label="Charts">
+          <img src="https://www.figma.com/api/mcp/asset/1718258c-51b9-4b5f-9440-f489ce664a70" alt="" width="16" height="16" />
+        </button>
+      </div>
+
+      <div class="sq-page__toolbar-divider"></div>
+
+      <!-- Group 2: User/Screen/Comment -->
+      <div class="sq-page__toolbar-icon-group">
+        <button class="sq-page__toolbar-tab" aria-label="Users">
+          <img src="https://www.figma.com/api/mcp/asset/e452224b-0acd-4514-b00b-4be9ee904440" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Screen">
+          <img src="https://www.figma.com/api/mcp/asset/224b0cad-6d0c-4898-b1a8-c4f4d5d65319" alt="" width="16" height="16" />
+        </button>
+        <button class="sq-page__toolbar-tab" aria-label="Comments">
+          <img src="https://www.figma.com/api/mcp/asset/b38302a4-d778-430a-88a7-0f0abbe10341" alt="" width="16" height="16" />
+        </button>
+      </div>
+
+      <div class="sq-page__toolbar-divider"></div>
+
+      <!-- Wrench -->
+      <div class="sq-page__toolbar-icon-group">
+        <button class="sq-page__toolbar-tab" aria-label="Settings">
+          <img src="https://www.figma.com/api/mcp/asset/fda06358-8297-47ce-9261-461a331b28d1" alt="" width="16" height="16" />
+        </button>
+      </div>
+
+      <div class="sq-page__toolbar-divider"></div>
+
+      <!-- Three dots (Icon/System/ellipsis-vertical, Figma 0:750) -->
+      <div class="sq-page__toolbar-icon-group">
+        <button class="sq-page__toolbar-tab" aria-label="More">
+          <img src="https://www.figma.com/api/mcp/asset/6a89e62a-66af-42d8-90bf-e7727c5e8585" alt="" width="4" height="16">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav tabs -->
+  <nav class="sq-page__nav">
+    <button class="sq-page__nav-tab">INSIGHTS</button>
+    <button class="sq-page__nav-tab">CONCEPTS</button>
+    <button class="sq-page__nav-tab sq-page__nav-tab--active">DELIVERABLES</button>
+    <button class="sq-page__nav-tab">FILES</button>
+  </nav>
+
+  <!-- Deliverable toolbar -->
+  <div class="sq-page__del-toolbar">
+      <div class="sq-page__del-toolbar-left">
+        <button class="sq-page__icon-btn" aria-label="Menu">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <line x1="2" y1="4" x2="14" y2="4" stroke="#373737" stroke-width="1.5"/>
+            <line x1="2" y1="8" x2="14" y2="8" stroke="#373737" stroke-width="1.5"/>
+            <line x1="2" y1="12" x2="14" y2="12" stroke="#373737" stroke-width="1.5"/>
+          </svg>
+        </button>
+        <h1 class="sq-page__del-title">Survey Questions</h1>
+      </div>
+      <div class="sq-page__del-toolbar-right">
+        <button class="sq-page__icon-btn" aria-label="More">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.5" fill="#373737"/><circle cx="8" cy="8" r="1.5" fill="#373737"/><circle cx="8" cy="13" r="1.5" fill="#373737"/></svg>
+        </button>
+        <button class="sq-page__add-btn" aria-label="Add">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="8" y1="2" x2="8" y2="14" stroke="white" stroke-width="2"/><line x1="2" y1="8" x2="14" y2="8" stroke="white" stroke-width="2"/></svg>
+        </button>
+      </div>
+    </div>
+
+  <!-- Filters bar -->
+  <div class="filters-bar">
+      <div class="filters-bar__left">
+        <div class="filters-bar__data-driver">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#707276" stroke-width="1.2"/><circle cx="6" cy="6" r="2" fill="#707276"/></svg>
+          <a class="filters-bar__link">Concepts</a>
+        </div>
+        <span class="filters-bar__divider"></span>
+        <div class="filters-bar__filters">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1h10L7.5 5.5V10L4.5 11V5.5L1 1z" stroke="#707276" stroke-width="1.2"/></svg>
+          <a class="filters-bar__link">All Concepts</a>
+          <a class="filters-bar__link">United States</a>
+          <a class="filters-bar__link">General Population -new</a>
+        </div>
+      </div>
+      <div class="filters-bar__right">
+        <div class="filters-bar__chart-types">
+          <!-- Table (active) -->
+          <button class="filters-bar__chart-btn filters-bar__chart-btn--active" aria-label="Table view">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="5.5" x2="15" y2="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8.5" x2="15" y2="8.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="11.5" x2="15" y2="11.5" stroke="currentColor" stroke-width="1.2"/><line x1="5.5" y1="2" x2="5.5" y2="14" stroke="currentColor" stroke-width="1.2"/></svg>
+          </button>
+          <!-- Bar -->
+          <button class="filters-bar__chart-btn" aria-label="Bar chart">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="8" width="3" height="6" stroke="currentColor" stroke-width="1.2"/><rect x="6.5" y="4" width="3" height="10" stroke="currentColor" stroke-width="1.2"/><rect x="11" y="2" width="3" height="12" stroke="currentColor" stroke-width="1.2"/></svg>
+          </button>
+          <!-- Pie -->
+          <button class="filters-bar__chart-btn" aria-label="Pie chart">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 2V8L13.2 5" stroke="currentColor" stroke-width="1.2"/></svg>
+          </button>
+        </div>
+        <span class="filters-bar__divider"></span>
+        <button class="filters-bar__chart-btn" aria-label="Options">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+      </div>
+  </div>
+
+  <!-- Body -->
+  <div class="sq-page__body">
+    <!-- Deliverable container -->
+    <div class="sq-page__deliverable">
+
+      <!-- Question selector -->
+      <div class="sq-page__question-selector">
+        <div class="sq-page__question-select">
+          <span class="sq-page__question-title">Brand Purchased (CTF) - US (Potato Chips (Such as Lays, Pringles, etc))</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="#373737" stroke-width="1.2"/></svg>
+        </div>
+        <p class="sq-page__question-subtitle">What brands of ${Category2} have you purchased ${CategoryUsageTime}?</p>
+      </div>
+
+      <!-- Data table -->
+      <div class="data-table" id="dataTable"></div>
+
+      <!-- Bar chart view -->
+      <div class="bar-chart-view" id="barChartView"></div>
+
+      <!-- Vertical bar chart view -->
+      <div class="vbar-view" id="vbarChartView"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Chart Options Drawer -->
+<div class="chart-options-overlay" id="chartOptionsOverlay">
+  <div class="chart-options-drawer">
+    <div class="chart-options__header">
+      <span class="chart-options__title">Chart Options</span>
+      <button class="chart-options__close" id="chartOptionsClose" aria-label="Close">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="#373737" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+    <div class="chart-options__body">
+
+      <!-- VALUES -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Values</div>
+        <div class="chart-options__section-content">
+          <div class="chart-options__sub-header">Decimals</div>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="0" id="valDec0" checked /> No decimal places
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="1" id="valDec1" /> 1 decimal place
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="2" id="valDec2" /> 2 decimal places
+          </label>
+        </div>
+      </div>
+
+      <!-- METRICS (table only) -->
+      <div class="chart-options__section" data-view="table">
+        <div class="chart-options__section-title">Metrics</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkAverage" checked /> Average
+          </label>
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkMeanFav" checked /> Mean Fav
+          </label>
+          <div class="chart-options__sub-header">Decimals</div>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="0" id="metDec0" checked /> No decimal places
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="1" id="metDec1" /> 1 decimal place
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="2" id="metDec2" /> 2 decimal places
+          </label>
+        </div>
+      </div>
+
+      <!-- LAYOUT (bar only) -->
+      <div class="chart-options__section" data-view="bar">
+        <div class="chart-options__section-title">Layout</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="radio" name="layout" value="horizontal" id="layHorizontal" checked /> Horizontal Bar Chart
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="layout" value="vertical" id="layVertical" /> Vertical Bar Chart
+          </label>
+        </div>
+      </div>
+
+      <!-- ADVANCED OPTIONS -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Advanced Options</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkMention5" checked /> Mention &lt; 5%
+          </label>
+          <label class="chart-options__item chart-options__item--indent">
+            <input type="checkbox" id="chkCombine" /> Combine as 'All other answers'
+          </label>
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkAggregate" /> Aggregate
+          </label>
+        </div>
+      </div>
+
+      <!-- INDICATORS -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Indicators</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkStatTesting" checked /> Stat Testing
+          </label>
+        </div>
+      </div>
+
+      <!-- SCALE (bar only) -->
+      <div class="chart-options__section" data-view="bar">
+        <div class="chart-options__section-title">Scale</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" id="chkShowScale" checked /> Show Chart Scale
+          </label>
+        </div>
+      </div>
+
+      <!-- PRESENTATION -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Presentation</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="small" /> Small
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="medium" checked /> Medium
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="large" /> Large
+          </label>
+        </div>
+      </div>
+
+      <!-- ROTATE DATA VIEW -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-content" style="padding-top: 8px;">
+          <label class="chart-options__item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="1" stroke="#373737" stroke-width="1.2"/><line x1="1" y1="5" x2="15" y2="5" stroke="#373737" stroke-width="1.2"/><line x1="5" y1="1" x2="5" y2="15" stroke="#373737" stroke-width="1.2"/></svg>
+            Rotate Data View
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Raw data (numeric values + sig letters stored separately) ──
+const concepts = [
+  { letter: 'A', name: 'Crispies Natural Harvest\nSweet Potato', sample: 265 },
+  { letter: 'B', name: 'Crispies Natural Harvest\nWholesome Ingredients', sample: 265 },
+  { letter: 'C', name: 'Crispies Natural Harvest\nCassava', sample: 265 },
+  { letter: 'D', name: 'Crispies Natural Harvest\nConcept 4', sample: 265 },
+];
+
+// Each row: label, raw numeric values per concept, sig letters per concept (empty string = none)
+const rows = [
+  { label: 'Cares for your skin and your senses', values: [20, 20, 20, 20], sig: ['BCD','','',''] },
+  { label: 'Dermatologically tested', values: [25, 25, 25, 25], sig: ['','','',''] },
+  { label: 'Good for the whole family', values: [15, 15, 15, 15], sig: ['','ACD','',''] },
+  { label: 'Leaves skin soft, clean and happy', values: [26, 26, 26, 26], sig: ['','','',''] },
+  { label: 'Luxury redefined, not by cost but how it makes you feel', values: [1, 1, 1, 1], sig: ['','','',''] },
+  { label: 'Does luxe differently', values: [1, 1, 1, 1], sig: ['','','',''] },
+  { label: 'Rooted in Indulgence', values: [2, 2, 2, 2], sig: ['','','',''] },
+  { label: 'Crafted for the senses', values: [2, 2, 2, 2], sig: ['','','',''] },
+  { label: 'Transforms the everyday into a rich expressive ritual', values: [2, 2, 2, 2], sig: ['','','ABD',''] },
+  { label: 'Delivers cleansing moisture', values: [1, 1, 1, 1], sig: ['','','',''] },
+  { label: 'Fragrances that pop', values: [1, 1, 1, 1], sig: ['','','',''] },
+  { label: 'Textures that delight', values: [2, 2, 2, 2], sig: ['','','','ABC'] },
+  { label: 'Provides a sensorial experience', values: [1, 1, 1, 1], sig: ['','','',''] },
+];
+
+const summaryRows = [
+  { label: 'Average', key: 'average', values: [4, 4, 4, 4] },
+  { label: 'Mean Fav', key: 'meanfav', values: [1, 1, 1, 1] },
+];
+
+// ── Chart Options State ──
+function getOptions() {
+  return {
+    valDecimals: parseInt(document.querySelector('input[name="decimals"]:checked').value),
+    showAverage: document.getElementById('chkAverage').checked,
+    showMeanFav: document.getElementById('chkMeanFav').checked,
+    metDecimals: parseInt(document.querySelector('input[name="metricsDecimals"]:checked').value),
+    mentionLt5: document.getElementById('chkMention5').checked,
+    combineAll: document.getElementById('chkCombine').checked,
+    aggregate: document.getElementById('chkAggregate').checked,
+    statTesting: document.getElementById('chkStatTesting').checked,
+    showScale: document.getElementById('chkShowScale').checked,
+    layout: document.querySelector('input[name="layout"]:checked').value,
+  };
+}
+
+// ── Toggle drawer sections by view ──
+function updateDrawerSections(view) {
+  document.querySelectorAll('.chart-options__section[data-view]').forEach(sec => {
+    sec.style.display = sec.dataset.view === view ? '' : 'none';
+  });
+}
+
+// ── Formatting helpers ──
+function fmtPct(num, decimals) {
+  return num.toFixed(decimals) + '%';
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ── Build Table ──
+function buildTable() {
+  const opts = getOptions();
+  const table = document.getElementById('dataTable');
+
+  // 1. Filter rows based on mentionLt5
+  let displayRows;
+  if (opts.mentionLt5) {
+    // Show all rows (including < 5%)
+    displayRows = rows.map(r => ({ ...r }));
+  } else {
+    // Hide rows where ALL values < 5
+    displayRows = rows.filter(r => r.values.some(v => v >= 5)).map(r => ({ ...r }));
+  }
+
+  // 2. Combine as 'All other answers' — combine rows where ALL values < 5 into one summed row
+  let combinedRow = null;
+  if (opts.mentionLt5 && opts.combineAll) {
+    const belowRows = displayRows.filter(r => r.values.every(v => v < 5));
+    const aboveRows = displayRows.filter(r => !r.values.every(v => v < 5));
+    if (belowRows.length > 0) {
+      const sumValues = concepts.map((_, ci) =>
+        belowRows.reduce((sum, r) => sum + r.values[ci], 0)
+      );
+      combinedRow = { label: 'All other answers', values: sumValues, sig: concepts.map(() => '') };
+      displayRows = [...aboveRows, combinedRow];
+    }
+  }
+
+  // 3. Build summary rows to show
+  const visibleSummary = summaryRows.filter(sr => {
+    if (sr.key === 'average') return opts.showAverage;
+    if (sr.key === 'meanfav') return opts.showMeanFav;
+    return true;
+  });
+
+  // 4. Compute summary values from visible rows (recalculate average/mean fav)
+  // For simplicity, use the stored summary values (they'd be server-computed in real app)
+
+  let html = '';
+
+  // Label column
+  html += '<div class="data-table__label-col">';
+  html += '<div class="data-table__header-cell data-table__header-cell--empty"></div>';
+  displayRows.forEach(r => {
+    html += `<div class="data-table__cell data-table__cell--label">${esc(r.label)}</div>`;
+  });
+  if (visibleSummary.length > 0) {
+    html += '<div class="data-table__cell data-table__cell--spacer"></div>';
+    visibleSummary.forEach(r => {
+      html += `<div class="data-table__cell data-table__cell--summary-label">${esc(r.label)}</div>`;
+    });
+  }
+  html += '</div>';
+
+  // Aggregate column (if enabled) — inserted before concept columns
+  if (opts.aggregate) {
+    const totalSample = concepts.reduce((s, c) => s + c.sample, 0);
+    html += '<div class="data-table__data-col">';
+    html += '<div class="data-table__header-cell"><div class="data-table__header-content">';
+    html += `<span class="data-table__concept-name" style="font-weight:700">Aggregate</span>`;
+    html += `<span class="data-table__sample-size">n=${totalSample}</span>`;
+    html += '</div></div>';
+    displayRows.forEach(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      html += `<div class="data-table__cell data-table__cell--value">${fmtPct(avg, opts.valDecimals)}</div>`;
+    });
+    if (visibleSummary.length > 0) {
+      html += '<div class="data-table__cell data-table__cell--spacer"></div>';
+      visibleSummary.forEach(r => {
+        const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+        html += `<div class="data-table__cell data-table__cell--value">${fmtPct(avg, opts.metDecimals)}</div>`;
+      });
+    }
+    html += '</div>';
+  }
+
+  // Data columns
+  concepts.forEach((c, ci) => {
+    html += '<div class="data-table__data-col">';
+    // Header
+    html += '<div class="data-table__header-cell"><div class="data-table__header-content">';
+    html += `<span class="data-table__badge">${c.letter}</span>`;
+    html += `<span class="data-table__concept-name">${c.name.replace(/\n/g,'<br>')}</span>`;
+    html += `<span class="data-table__sample-size">n=${c.sample}</span>`;
+    html += '</div></div>';
+
+    // Data rows — use valDecimals
+    displayRows.forEach(r => {
+      const formatted = fmtPct(r.values[ci], opts.valDecimals);
+      const sigLetters = r.sig[ci];
+      if (opts.statTesting && sigLetters) {
+        html += `<div class="data-table__cell data-table__cell--value"><span class="data-table__sig">${sigLetters}</span>${formatted}</div>`;
+      } else {
+        html += `<div class="data-table__cell data-table__cell--value">${formatted}</div>`;
+      }
+    });
+
+    // Summary rows — use metDecimals
+    if (visibleSummary.length > 0) {
+      html += '<div class="data-table__cell data-table__cell--spacer"></div>';
+      visibleSummary.forEach(r => {
+        html += `<div class="data-table__cell data-table__cell--value">${fmtPct(r.values[ci], opts.metDecimals)}</div>`;
+      });
+    }
+
+    html += '</div>';
+  });
+
+  table.innerHTML = html;
+  equalizeRowHeights();
+}
+
+// ── Equalize row heights across all columns ──
+function equalizeRowHeights() {
+  const table = document.getElementById('dataTable');
+  const cols = table.querySelectorAll('.data-table__label-col, .data-table__data-col');
+  if (cols.length === 0) return;
+
+  // Reset heights first
+  cols.forEach(col => {
+    col.querySelectorAll('.data-table__header-cell, .data-table__cell').forEach(cell => {
+      cell.style.height = '';
+    });
+  });
+
+  // Get max cell count from any column
+  const maxCells = Math.max(...[...cols].map(col =>
+    col.querySelectorAll('.data-table__header-cell, .data-table__cell').length
+  ));
+
+  // For each row index, find max height across columns and apply to all cells
+  for (let i = 0; i < maxCells; i++) {
+    let maxH = 0;
+    const cells = [];
+    cols.forEach(col => {
+      const allCells = col.querySelectorAll('.data-table__header-cell, .data-table__cell');
+      if (allCells[i]) {
+        cells.push(allCells[i]);
+        maxH = Math.max(maxH, allCells[i].getBoundingClientRect().height);
+      }
+    });
+    cells.forEach(cell => { cell.style.height = maxH + 'px'; });
+  }
+}
+
+buildTable();
+updateDrawerSections('table');
+
+// ── Build Bar Chart ──
+function buildBarChart() {
+  const opts = getOptions();
+  const container = document.getElementById('barChartView');
+
+  // Filter rows same as table
+  let displayRows;
+  if (opts.mentionLt5) {
+    displayRows = rows.map(r => ({ ...r }));
+  } else {
+    displayRows = rows.filter(r => r.values.some(v => v >= 5)).map(r => ({ ...r }));
+  }
+
+  // Combine as 'All other answers'
+  if (opts.mentionLt5 && opts.combineAll) {
+    const belowRows = displayRows.filter(r => r.values.every(v => v < 5));
+    const aboveRows = displayRows.filter(r => !r.values.every(v => v < 5));
+    if (belowRows.length > 0) {
+      const sumValues = concepts.map((_, ci) =>
+        belowRows.reduce((sum, r) => sum + r.values[ci], 0)
+      );
+      displayRows = [...aboveRows, { label: 'All other answers', values: sumValues, sig: concepts.map(() => '') }];
+    }
+  }
+
+  let html = '<div class="bar-chart-cards">';
+
+  // Aggregate card (if enabled)
+  if (opts.aggregate) {
+    const totalSample = concepts.reduce((s, c) => s + c.sample, 0);
+    html += '<div class="bar-chart-card">';
+
+    // Title
+    html += '<div class="bar-chart-card__title">';
+    html += '<div class="bar-chart-card__title-top">';
+    html += `<span class="bar-chart-card__name" style="font-weight:700">Aggregate</span>`;
+    html += '</div>';
+    html += `<span class="bar-chart-card__sample">n=${totalSample}</span>`;
+    html += '</div>';
+
+    // Range scale
+    if (opts.showScale) {
+      html += '<div class="bar-chart-card__scale-wrap">';
+      html += '<div class="bar-chart-card__scale">';
+      html += '<span class="bar-chart-card__scale-label bar-chart-card__scale-label--min">0</span>';
+      html += '<span class="bar-chart-card__scale-label bar-chart-card__scale-label--max">100</span>';
+      html += '</div></div>';
+    }
+
+    // Bar rows
+    displayRows.forEach(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      const formatted = fmtPct(avg, opts.valDecimals);
+      const isCombined = r.label === 'All other answers';
+      const barColor = isCombined ? '#707276' : '#675895';
+
+      html += '<div class="bar-chart-row">';
+      html += `<span class="bar-chart-row__label">${esc(r.label)}</span>`;
+      html += '<div class="bar-chart-row__bar-wrap">';
+      html += '<div class="bar-chart-row__bar-frame">';
+      html += `<div class="bar-chart-row__bar" style="width:${avg}%;background:${barColor}"></div>`;
+      html += '</div>';
+      html += `<span class="bar-chart-row__value" style="color:#707276">${formatted}</span>`;
+      html += '</div>';
+      html += '<span class="bar-chart-row__sig"></span>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+  }
+
+  concepts.forEach((c, ci) => {
+    html += '<div class="bar-chart-card">';
+
+    // Title
+    html += '<div class="bar-chart-card__title">';
+    html += '<div class="bar-chart-card__title-top">';
+    html += `<span class="bar-chart-card__badge">${c.letter}</span>`;
+    html += `<span class="bar-chart-card__name">${c.name.replace(/\n/g, ' - ')}</span>`;
+    html += '</div>';
+    html += `<span class="bar-chart-card__sample">n=${c.sample}</span>`;
+    html += '</div>';
+
+    // Range scale
+    if (opts.showScale) {
+      html += '<div class="bar-chart-card__scale-wrap">';
+      html += '<div class="bar-chart-card__scale">';
+      html += '<span class="bar-chart-card__scale-label bar-chart-card__scale-label--min">0</span>';
+      html += '<span class="bar-chart-card__scale-label bar-chart-card__scale-label--max">100</span>';
+      html += '</div></div>';
+    }
+
+    // Bar rows
+    displayRows.forEach(r => {
+      const val = r.values[ci];
+      const formatted = fmtPct(val, opts.valDecimals);
+      const sigLetters = opts.statTesting ? r.sig[ci] : '';
+      const isCombined = r.label === 'All other answers';
+      const barColor = isCombined ? '#707276' : '#675895';
+
+      html += '<div class="bar-chart-row">';
+      if (!opts.aggregate && ci === 0) {
+        html += `<span class="bar-chart-row__label">${esc(r.label)}</span>`;
+      } else {
+        html += `<span class="bar-chart-row__label" style="visibility:hidden">${esc(r.label)}</span>`;
+      }
+      html += '<div class="bar-chart-row__bar-wrap">';
+      html += '<div class="bar-chart-row__bar-frame">';
+      html += `<div class="bar-chart-row__bar" style="width:${val}%;background:${barColor}"></div>`;
+      html += '</div>';
+      html += `<span class="bar-chart-row__value" style="color:#707276">${formatted}</span>`;
+      html += '</div>';
+      if (sigLetters) {
+        html += `<span class="bar-chart-row__sig">${esc(sigLetters)}</span>`;
+      } else {
+        html += '<span class="bar-chart-row__sig"></span>';
+      }
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+  equalizeBarChartRows();
+}
+
+// ── Equalize bar chart row heights across all cards ──
+function equalizeBarChartRows() {
+  const cards = document.querySelectorAll('.bar-chart-card');
+  if (cards.length === 0) return;
+
+  // Reset heights
+  cards.forEach(card => {
+    card.querySelector('.bar-chart-card__title').style.height = '';
+    card.querySelectorAll('.bar-chart-row').forEach(row => { row.style.height = ''; });
+  });
+
+  // Equalize title heights
+  let maxTitle = 0;
+  const titles = [...cards].map(card => card.querySelector('.bar-chart-card__title'));
+  titles.forEach(t => { maxTitle = Math.max(maxTitle, t.getBoundingClientRect().height); });
+  titles.forEach(t => { t.style.height = maxTitle + 'px'; });
+
+  // Equalize each row index
+  const rowCounts = Math.max(...[...cards].map(c => c.querySelectorAll('.bar-chart-row').length));
+  for (let i = 0; i < rowCounts; i++) {
+    let maxH = 0;
+    const rowCells = [];
+    cards.forEach(card => {
+      const row = card.querySelectorAll('.bar-chart-row')[i];
+      if (row) {
+        rowCells.push(row);
+        maxH = Math.max(maxH, row.getBoundingClientRect().height);
+      }
+    });
+    rowCells.forEach(r => { r.style.height = maxH + 'px'; });
+  }
+}
+
+buildBarChart();
+
+// ── Vertical Bar Chart ──
+let vbarPage = 0;
+let vbarPerPage = 2;
+
+function buildVerticalBarChart() {
+  const opts = getOptions();
+  const container = document.getElementById('vbarChartView');
+
+  // Filter rows same as table
+  let displayRows;
+  if (opts.mentionLt5) {
+    displayRows = rows.map(r => ({ ...r }));
+  } else {
+    displayRows = rows.filter(r => r.values.some(v => v >= 5)).map(r => ({ ...r }));
+  }
+  if (opts.mentionLt5 && opts.combineAll) {
+    const belowRows = displayRows.filter(r => r.values.every(v => v < 5));
+    const aboveRows = displayRows.filter(r => !r.values.every(v => v < 5));
+    if (belowRows.length > 0) {
+      const sumValues = concepts.map((_, ci) =>
+        belowRows.reduce((sum, r) => sum + r.values[ci], 0)
+      );
+      displayRows = [...aboveRows, { label: 'All other answers', values: sumValues, sig: concepts.map(() => '') }];
+    }
+  }
+
+  const colCount = displayRows.length;
+  // Each column needs ~90px (label cell). Available width per card ~615px (minus 64px left pad).
+  const containerW = container.parentElement ? container.parentElement.offsetWidth - 48 : 1326;
+  const cardMinW = 64 + colCount * 90;
+  if (cardMinW * 2 + 32 > containerW) {
+    vbarPerPage = 1;
+  } else {
+    vbarPerPage = 2;
+  }
+
+  // Build a unified list of cards: aggregate (if on) + concepts
+  const allCards = [];
+  if (opts.aggregate) {
+    const totalSample = concepts.reduce((s, c) => s + c.sample, 0);
+    allCards.push({ type: 'aggregate', name: 'Aggregate', sample: totalSample, conceptIdx: -1 });
+  }
+  concepts.forEach((c, i) => {
+    allCards.push({ type: 'concept', name: c.name, sample: c.sample, letter: c.letter, conceptIdx: i, concept: c });
+  });
+
+  const totalPages = Math.ceil(allCards.length / vbarPerPage);
+  if (vbarPage >= totalPages) vbarPage = totalPages - 1;
+  if (vbarPage < 0) vbarPage = 0;
+  const startIdx = vbarPage * vbarPerPage;
+  const visibleCards = allCards.slice(startIdx, startIdx + vbarPerPage);
+
+  let html = '';
+
+  // Header row: titles
+  html += '<div class="vbar-header">';
+  html += '<div style="width:16px;flex-shrink:0"></div>';
+
+  visibleCards.forEach((card, i) => {
+    if (i > 0) {
+      html += '<div class="vbar-divider-header"><div class="vbar-divider-header__line"></div></div>';
+    }
+    html += '<div class="vbar-title">';
+    html += '<div class="vbar-title__top">';
+    if (card.type === 'aggregate') {
+      html += `<span class="vbar-title__name" style="font-weight:700">Aggregate</span>`;
+    } else {
+      html += `<span class="vbar-title__badge">${card.letter}</span>`;
+      html += `<span class="vbar-title__name">${card.name.replace(/\n/g, ' - ')}</span>`;
+    }
+    html += '</div>';
+    html += `<span class="vbar-title__sample">n=${card.sample}</span>`;
+    html += '</div>';
+  });
+  html += '<div style="width:16px;flex-shrink:0"></div>'; // right nav space
+  html += '</div>';
+
+  // Body row: nav + scale + cards + nav
+  html += '<div class="vbar-body">';
+
+  // Left chevron
+  const leftDisabled = vbarPage === 0 ? ' vbar-nav--disabled' : '';
+  html += `<div class="vbar-nav${leftDisabled}" id="vbarPrev">&#8249;</div>`;
+
+  // Vertical scale
+  if (opts.showScale) {
+    html += '<div class="vbar-scale">';
+    html += '<div class="vbar-scale__track">';
+    html += '<span class="vbar-scale__label vbar-scale__label--max">100</span>';
+    html += '<span class="vbar-scale__label vbar-scale__label--min">0</span>';
+    html += '</div></div>';
+  }
+
+  // Cards
+  visibleCards.forEach((card, i) => {
+    if (i > 0) {
+      html += '<div class="vbar-divider"></div>';
+    }
+    html += '<div class="vbar-card">';
+    html += '<div class="vbar-card__cols">';
+
+    if (card.type === 'aggregate') {
+      displayRows.forEach(r => {
+        const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+        const formatted = fmtPct(avg, opts.valDecimals);
+        const isCombined = r.label === 'All other answers';
+        const barColor = isCombined ? '#707276' : '#675895';
+        const barH = Math.max(2, (avg / 100) * 221);
+
+        html += '<div class="vbar-col">';
+        html += '<div class="vbar-col__bars">';
+        html += `<span class="vbar-col__value" style="color:#707276">${formatted}</span>`;
+        html += `<div class="vbar-col__bar" style="height:${barH}px;background:${barColor}"></div>`;
+        html += '</div>';
+        html += '<div class="vbar-label-cell">';
+        html += `<div class="vbar-label-cell__text">${esc(r.label)}</div>`;
+        html += '</div>';
+        html += '</div>';
+      });
+    } else {
+      const ci = card.conceptIdx;
+      displayRows.forEach(r => {
+        const val = r.values[ci];
+        const formatted = fmtPct(val, opts.valDecimals);
+        const sigLetters = opts.statTesting ? r.sig[ci] : '';
+        const isCombined = r.label === 'All other answers';
+        const barColor = isCombined ? '#707276' : '#675895';
+        const barH = Math.max(2, (val / 100) * 221);
+
+        html += '<div class="vbar-col">';
+        html += '<div class="vbar-col__bars">';
+        if (sigLetters) {
+          html += `<span class="vbar-col__sig">${esc(sigLetters)}</span>`;
+        }
+        html += `<span class="vbar-col__value" style="color:#707276">${formatted}</span>`;
+        html += `<div class="vbar-col__bar" style="height:${barH}px;background:${barColor}"></div>`;
+        html += '</div>';
+        html += '<div class="vbar-label-cell">';
+        html += `<div class="vbar-label-cell__text">${esc(r.label)}</div>`;
+        html += '</div>';
+        html += '</div>';
+      });
+    }
+
+    html += '</div>';
+    html += '</div>';
+  });
+
+  // Right chevron
+  const rightDisabled = vbarPage >= totalPages - 1 ? ' vbar-nav--disabled' : '';
+  html += `<div class="vbar-nav${rightDisabled}" id="vbarNext">&#8250;</div>`;
+
+  html += '</div>';
+
+  container.innerHTML = html;
+
+  // Wire chevron clicks
+  const prevBtn = document.getElementById('vbarPrev');
+  const nextBtn = document.getElementById('vbarNext');
+  if (prevBtn) prevBtn.addEventListener('click', () => { vbarPage--; buildVerticalBarChart(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { vbarPage++; buildVerticalBarChart(); });
+}
+
+// ── Chart type toggle ──
+let currentView = 'table';
+const chartBtns = document.querySelectorAll('.filters-bar__chart-btn[aria-label]');
+const tableBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Table view"]');
+const barBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Bar chart"]');
+const pieBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Pie chart"]');
+const dataTable = document.getElementById('dataTable');
+const barChartView = document.getElementById('barChartView');
+const vbarChartView = document.getElementById('vbarChartView');
+
+function switchView(view) {
+  currentView = view;
+  // Update button styles
+  [tableBtn, barBtn, pieBtn].forEach(btn => {
+    if (btn) btn.classList.remove('filters-bar__chart-btn--active');
+  });
+
+  // Hide all views
+  dataTable.style.display = 'none';
+  barChartView.classList.remove('bar-chart-view--active');
+  vbarChartView.classList.remove('vbar-view--active');
+
+  // Reset scroll to top
+  document.querySelector('.sq-page').scrollTop = 0;
+
+  if (view === 'table') {
+    tableBtn.classList.add('filters-bar__chart-btn--active');
+    dataTable.style.display = '';
+    updateDrawerSections('table');
+    buildTable();
+  } else if (view === 'bar') {
+    barBtn.classList.add('filters-bar__chart-btn--active');
+    const opts = getOptions();
+    if (opts.layout === 'vertical') {
+      vbarChartView.classList.add('vbar-view--active');
+      updateDrawerSections('bar');
+      buildVerticalBarChart();
+    } else {
+      barChartView.classList.add('bar-chart-view--active');
+      updateDrawerSections('bar');
+      buildBarChart();
+    }
+  }
+}
+
+tableBtn.addEventListener('click', () => switchView('table'));
+barBtn.addEventListener('click', () => switchView('bar'));
+if (pieBtn) pieBtn.addEventListener('click', () => switchView('pie'));
+
+// Re-equalize on resize so rows stay aligned at any viewport width
+window.addEventListener('resize', () => {
+  if (currentView === 'table') equalizeRowHeights();
+  else if (currentView === 'bar') {
+    const opts = getOptions();
+    if (opts.layout === 'vertical') buildVerticalBarChart();
+    else equalizeBarChartRows();
+  }
+});
+
+// ── Wire up chart option changes → rebuild active view ──
+document.querySelectorAll('#chartOptionsOverlay input').forEach(input => {
+  input.addEventListener('change', () => {
+    if (currentView === 'table') buildTable();
+    else if (currentView === 'bar') switchView('bar');
+  });
+});
+
+// Chart Options drawer toggle
+const overlay = document.getElementById('chartOptionsOverlay');
+const optionsBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Options"]');
+const closeBtn = document.getElementById('chartOptionsClose');
+
+optionsBtn.addEventListener('click', () => {
+  overlay.style.top = optionsBtn.getBoundingClientRect().top + 'px';
+  overlay.classList.add('chart-options-overlay--open');
+});
+closeBtn.addEventListener('click', () => {
+  overlay.classList.remove('chart-options-overlay--open');
+});
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) overlay.classList.remove('chart-options-overlay--open');
+});
+
+// Show scrollbar only while scrolling
+const sqPage = document.querySelector('.sq-page');
+let scrollTimer;
+sqPage.addEventListener('scroll', () => {
+  sqPage.classList.add('is-scrolling');
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => sqPage.classList.remove('is-scrolling'), 1000);
+});
+</script>
+</body>
+</html>

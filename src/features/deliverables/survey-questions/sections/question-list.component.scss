@@ -1,0 +1,116 @@
+@import '../../../../styles/tokens';
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__search {
+    padding: $space-3;
+    border-bottom: $border-width-sm solid $border-default;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 6px $space-3;
+    border: $border-width-sm solid $border-default;
+    border-radius: $border-radius-sm;
+    font-family: $font-family-primary;
+    font-size: $font-size-200;
+    color: $font-color-primary;
+
+    &::placeholder { color: $font-color-tertiary; }
+    &:focus {
+      outline: none;
+      border-color: $gray-500;
+      box-shadow: 0 0 0 2px $gray-300;
+    }
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  &__item {
+    padding: $space-3;
+    border-bottom: $border-width-sm solid $border-default;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $gray-50;
+    }
+
+    &--selected {
+      background-color: $gray-100;
+      border-left: 3px solid $gray-800;
+    }
+  }
+
+  &__item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-1;
+  }
+
+  &__order {
+    font-size: $font-size-100;
+    font-weight: $font-weight-bold;
+    color: $font-color-secondary;
+    text-transform: uppercase;
+  }
+
+  &__text {
+    font-size: $font-size-200;
+    color: $font-color-primary;
+    margin: 0 0 $space-2;
+    line-height: $line-height-200;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__item-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__category {
+    font-size: $font-size-100;
+    color: $font-color-tertiary;
+  }
+
+  &__delete {
+    display: flex;
+    padding: $space-1;
+    border: none;
+    border-radius: $border-radius-sm;
+    background: transparent;
+    color: $font-color-tertiary;
+    cursor: pointer;
+    transition: color $transition-fast, background-color $transition-fast;
+
+    &:hover {
+      color: $color-error;
+      background-color: rgba($color-error, 0.08);
+    }
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    p {
+      font-size: $font-size-200;
+      color: $font-color-tertiary;
+    }
+  }
+}

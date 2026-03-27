@@ -1,0 +1,141 @@
+@import '../../../../styles/tokens';
+
+// ── Data table — matches Figma "Table" node (35667:171515) ──
+
+.data-table {
+  display: flex;
+  gap: 1px;  // 1px gap between columns (Figma: gap-px)
+  align-items: flex-end;
+  width: 100%;
+
+  // ── Label column (first column) ──────
+  &__label-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 380px;
+    max-width: 520px;
+    flex-shrink: 0;
+  }
+
+  // ── Data column (concept columns) ────
+  &__data-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    min-width: 0;
+    border-left: $border-width-sm solid #ccc;
+  }
+
+  // ── Header cells ─────────────────────
+  &__header-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: $space-3 $space-2 $space-3 $space-4;
+    background-color: $surface-primary;
+    border-bottom: 2px solid #ccc;
+
+    &--empty {
+      // Empty header for label column — just match height
+      height: auto;
+      min-height: 36px;
+    }
+  }
+
+  &__header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: $space-2;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    padding: 2px $space-1;
+    border-radius: $border-radius-sm;
+    background-color: $font-color-primary;
+    color: #fff;
+    font-size: 11px;
+    font-weight: $font-weight-bold;
+    line-height: 11px;
+  }
+
+  &__concept-name {
+    font-size: $font-size-100; // 13px
+    font-weight: $font-weight-bold;
+    color: $font-color-primary;
+    text-align: right;
+    line-height: 16px;
+  }
+
+  &__sample-size {
+    font-size: $font-size-100;
+    font-weight: $font-weight-normal;
+    color: $font-color-tertiary;
+    line-height: 24px;
+  }
+
+  // ── Data cells ───────────────────────
+  &__cell {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: $space-3 $space-2 $space-3 $space-4;
+    font-size: $font-size-100; // 13px
+    line-height: 13px;
+    color: $font-color-primary;
+    position: relative;
+    background-color: $surface-primary;
+
+    // Bottom border via inset shadow (matches Figma pattern)
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: $border-width-sm;
+      background-color: #ccc;
+    }
+
+    // ── Label cell (left-aligned) ──
+    &--label {
+      padding: $space-3 $space-4 $space-3 $space-2;
+      justify-content: flex-start;
+    }
+
+    // ── Value cell (right-aligned) ──
+    &--value {
+      justify-content: flex-end;
+      text-align: right;
+      white-space: nowrap;
+      padding: $space-3 $space-2 $space-3 $space-4;
+    }
+
+    // ── Summary label (right-aligned) ──
+    &--summary-label {
+      justify-content: flex-end;
+      text-align: right;
+      padding: $space-3 $space-2 $space-3 $space-4;
+    }
+
+    // ── Spacer row ──
+    &--spacer {
+      height: 36px;
+      background: transparent;
+
+      &::after {
+        background-color: #ccc;
+      }
+    }
+  }
+
+  // ── Stat-sig letters ─────────────────
+  &__sig {
+    color: $font-color-tertiary;
+    margin-right: 4px;
+  }
+}

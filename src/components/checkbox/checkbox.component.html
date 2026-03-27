@@ -1,0 +1,12 @@
+<label [attr.for]="checkboxId" class="bases-checkbox" [class.bases-checkbox--disabled]="disabled">
+  <input
+    [id]="checkboxId"
+    type="checkbox"
+    [checked]="checked"
+    [disabled]="disabled"
+    [indeterminate]="indeterminate"
+    class="bases-checkbox__input"
+    (change)="onChange($event)"
+  />
+  <span *ngIf="label" class="bases-checkbox__label">{{ label }}</span>
+</label>

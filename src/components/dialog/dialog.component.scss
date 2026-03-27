@@ -1,0 +1,57 @@
+@import '../../styles/tokens';
+
+.bases-dialog {
+  border: none;
+  border-radius: $border-radius-sm;
+  box-shadow: $shadow-xl;
+  padding: 0;
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  font-family: $font-family-primary;
+
+  &::backdrop {
+    background: rgba($gray-900, 0.5);
+    backdrop-filter: blur(2px);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-3 $space-4;
+    border-bottom: $border-width-sm solid $border-default;
+  }
+
+  &__title {
+    font-size: $font-size-400;
+    font-weight: $font-weight-bold;
+    color: $font-color-primary;
+    margin: 0;
+  }
+
+  &__close {
+    display: flex;
+    padding: $space-1;
+    border: none;
+    border-radius: $border-radius-sm;
+    background: transparent;
+    color: $font-color-tertiary;
+    cursor: pointer;
+    transition: color $transition-fast, background-color $transition-fast;
+
+    &:hover {
+      color: $font-color-primary;
+      background-color: $gray-100;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px $gray-300;
+    }
+  }
+
+  &__body {
+    padding: $space-3 $space-4;
+  }
+}

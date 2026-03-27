@@ -1,0 +1,101 @@
+@import '../../../../styles/tokens';
+
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 $space-4;
+  border-bottom: $border-width-sm solid $border-default;
+  position: sticky;
+  top: 104px;
+  z-index: 7;
+  background: #ffffff;
+
+  // ── Left: data driver + filters ──────
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    flex: 1;
+  }
+
+  &__data-driver,
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__filters {
+    .filters-bar__link + .filters-bar__link {
+      margin-left: $space-2;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: $icon-size-sm;
+    height: $icon-size-sm;
+  }
+
+  &__link {
+    font-size: 11px;
+    line-height: 11px;
+    color: $font-color-primary;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: $space-1 0;
+
+    &:hover {
+      color: $font-color-secondary;
+    }
+  }
+
+  &__divider {
+    width: $border-width-sm;
+    height: 16px;
+    background-color: $border-default;
+    flex-shrink: 0;
+  }
+
+  // ── Right: chart type toggles ────────
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__chart-types {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+  }
+
+  &__chart-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 3px;
+    background: none;
+    color: #707276;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $gray-100;
+    }
+
+    &--active {
+      background-color: #151921;
+      color: #fff;
+
+      &:hover {
+        background-color: #151921;
+      }
+    }
+  }
+}

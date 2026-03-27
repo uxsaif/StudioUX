@@ -1,0 +1,63 @@
+<div class="question-preview">
+  <p class="question-preview__label">Respondent View</p>
+
+  <bases-card variant="outlined">
+    <bases-card-body>
+      <div class="question-preview__header">
+        <span class="question-preview__order">Q{{ question.order }}</span>
+        <bases-badge *ngIf="question.required" variant="error">Required</bases-badge>
+      </div>
+
+      <p class="question-preview__text">
+        {{ question.text || '(No question text yet)' }}
+      </p>
+
+      <!-- Single choice → radios -->
+      <div *ngIf="question.type === 'single-choice'" class="question-preview__options">
+        <label *ngFor="let opt of question.options" class="question-preview__radio">
+          <input type="radio" disabled [name]="'preview-' + question.id" />
+          <span>{{ opt }}</span>
+        </label>
+      </div>
+
+      <!-- Multi choice → checkboxes -->
+      <div *ngIf="question.type === 'multi-choice'" class="question-preview__options">
+        <label *ngFor="let opt of question.options" class="question-preview__checkbox">
+          <input type="checkbox" disabled />
+          <span>{{ opt }}</span>
+        </label>
+      </div>
+
+      <!-- Open-ended → textarea -->
+      <div *ngIf="question.type === 'open-ended'" class="question-preview__open">
+        <textarea
+          class="question-preview__textarea"
+          rows="3"
+          placeholder="Type your answer here…"
+          disabled
+        ></textarea>
+      </div>
+
+      <!-- Scale → numbered buttons -->
+      <div *ngIf="question.type === 'scale'" class="question-preview__scale">
+        <span class="question-preview__scale-label">Not at all likely</span>
+        <div class="question-preview__scale-points">
+          <button
+            *ngFor="let n of scalePoints"
+            class="question-preview__scale-btn"
+            disabled
+          >{{ n }}</button>
+        </div>
+        <span class="question-preview__scale-label">Extremely likely</span>
+      </div>
+
+      <!-- Ranking → numbered list -->
+      <div *ngIf="question.type === 'ranking'" class="question-preview__options">
+        <div *ngFor="let opt of question.options; let i = index" class="question-preview__rank-item">
+          <span class="question-preview__rank-num">{{ i + 1 }}</span>
+          <span>{{ opt }}</span>
+        </div>
+      </div>
+    </bases-card-body>
+  </bases-card>
+</div>

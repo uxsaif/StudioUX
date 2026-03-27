@@ -1,0 +1,113 @@
+// ─── BASES Design System — Design Tokens (SCSS) ────────────────────
+// Single source of truth, synced from Figma.
+// Import this partial into any component SCSS that needs tokens.
+//
+// Token naming follows Figma variable collections:
+//   01.0 • PRIMITIVES → raw values
+//   02.0 • ALIAS (Components) → semantic component tokens
+
+// ── Font ──────────────────────────────────────────────
+$font-family-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+$font-size-100: 0.8125rem;  // 13px
+$font-size-200: 0.875rem;   // 14px
+$font-size-300: 1rem;       // 16px
+$font-size-400: 1.125rem;   // 18px
+$font-size-500: 1.25rem;    // 20px
+$font-size-600: 1.5rem;     // 24px
+$font-size-700: 2rem;       // 32px
+
+$line-height-100: 0.8125rem; // 13px
+$line-height-200: 1.125rem;  // 18px
+$line-height-300: 1.25rem;   // 20px
+$line-height-400: 1.5rem;    // 24px
+$line-height-500: 1.625rem;  // 26px
+$line-height-600: 1.875rem;  // 30px
+$line-height-700: 2.5rem;    // 40px
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// ── Colors ─────────────────────────────────────────────
+// Neutrals / grays
+$gray-50:  #fafafa;
+$gray-100: #f5f5f5;
+$gray-200: #eeeeee;
+$gray-300: #dedede;  // Border/color/default
+$gray-400: #bdbdbd;
+$gray-500: #999999;  // Font/Color/tertiary
+$gray-600: #757575;
+$gray-700: #616161;
+$gray-800: #373737;  // Iconography/default — primary text
+$gray-900: #212121;
+
+// Surface
+$surface-primary:   #ffffff;
+$surface-secondary: #f5f5f5;
+
+// Border
+$border-default: #dedede;
+
+// Font semantic
+$font-color-primary:   #373737;
+$font-color-secondary: #616161;
+$font-color-tertiary:  #999999;
+$font-color-text-light: #707276;
+
+// Brand
+$brand-blue-300: #2d6df6;
+
+// Icon
+$icon-default: #373737;
+
+// Button AI variant
+$button-ai-default:  #6C4EF2;
+$button-ai-hover:    #5A3DD6;
+$button-ai-active:   #4B30BA;
+$button-ai-disabled: #D2C8F5;
+
+// Semantic
+$color-success: #16a34a;
+$color-error:   #dc2626;
+$color-warning: #f59e0b;
+$color-info:    #2563eb;
+
+// ── Spacing (from BASES Gap tokens) ────────────────────
+$space-0:  0px;
+$space-1:  4px;
+$space-2:  8px;   // gap-2
+$space-3:  12px;
+$space-4:  16px;  // gap-4
+$space-5:  20px;
+$space-6:  24px;
+$space-8:  32px;  // gap-8
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+
+// ── Border ─────────────────────────────────────────────
+$border-width-sm: 1px;
+$border-radius-none: 0;
+$border-radius-sm:   4px;  // Border/radius/sm
+$border-radius-md:   8px;
+$border-radius-lg:   12px;
+$border-radius-xl:   16px;
+$border-radius-full: 9999px;
+
+// ── Icon sizes ─────────────────────────────────────────
+$icon-size-sm: 12px;
+$icon-size-md: 16px;  // Iconography/!!!ALIAS-system/!!!ALIAS-md
+$icon-size-lg: 20px;
+$icon-size-xl: 24px;
+
+// ── Shadows ────────────────────────────────────────────
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+$shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+// ── Transitions ────────────────────────────────────────
+$transition-fast: 150ms ease;
+$transition-normal: 200ms ease;

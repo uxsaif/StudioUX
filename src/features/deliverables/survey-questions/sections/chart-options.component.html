@@ -1,0 +1,115 @@
+<div class="chart-options-overlay"
+     [class.chart-options-overlay--open]="open"
+     (click)="onOverlayClick($event)">
+  <div class="chart-options-drawer">
+
+    <div class="chart-options__header">
+      <span class="chart-options__title">Chart Options</span>
+      <button class="chart-options__close" (click)="close()" aria-label="Close">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M1 1l10 10M11 1L1 11" stroke="#373737" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="chart-options__body">
+
+      <!-- VALUES -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Values</div>
+        <div class="chart-options__section-content">
+          <div class="chart-options__sub-header">Decimals</div>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="0" [(ngModel)]="decimals" /> No decimal places
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="1" [(ngModel)]="decimals" /> 1 decimal place
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="decimals" value="2" [(ngModel)]="decimals" /> 2 decimal places
+          </label>
+        </div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Metrics</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" [(ngModel)]="showAverage" /> Average
+          </label>
+          <label class="chart-options__item">
+            <input type="checkbox" [(ngModel)]="showMeanFav" /> Mean Fav
+          </label>
+          <div class="chart-options__sub-header">Decimals</div>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="0" [(ngModel)]="metricsDecimals" /> No decimal places
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="1" [(ngModel)]="metricsDecimals" /> 1 decimal place
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="metricsDecimals" value="2" [(ngModel)]="metricsDecimals" /> 2 decimal places
+          </label>
+        </div>
+      </div>
+
+      <!-- ADVANCED OPTIONS -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Advanced Options</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" [(ngModel)]="mentionLessThan5" /> Mention &lt; 5%
+          </label>
+          <label class="chart-options__item chart-options__item--indent">
+            <input type="checkbox" [(ngModel)]="combineAllOther" /> Combine as 'All other answers'
+          </label>
+          <label class="chart-options__item">
+            <input type="checkbox" [(ngModel)]="aggregate" /> Aggregate
+          </label>
+        </div>
+      </div>
+
+      <!-- INDICATORS -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Indicators</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="checkbox" [(ngModel)]="statTesting" /> Stat Testing
+          </label>
+        </div>
+      </div>
+
+      <!-- PRESENTATION -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-title">Presentation</div>
+        <div class="chart-options__section-content">
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="small" [(ngModel)]="presentation" /> Small
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="medium" [(ngModel)]="presentation" /> Medium
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="presentation" value="large" [(ngModel)]="presentation" /> Large
+          </label>
+        </div>
+      </div>
+
+      <!-- ROTATE DATA VIEW -->
+      <div class="chart-options__section">
+        <div class="chart-options__section-content" style="padding-top: 8px;">
+          <label class="chart-options__item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="1" y="1" width="14" height="14" rx="1" stroke="#373737" stroke-width="1.2"/>
+              <line x1="1" y1="5" x2="15" y2="5" stroke="#373737" stroke-width="1.2"/>
+              <line x1="5" y1="1" x2="5" y2="15" stroke="#373737" stroke-width="1.2"/>
+            </svg>
+            Rotate Data View
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

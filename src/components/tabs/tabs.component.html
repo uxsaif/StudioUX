@@ -1,0 +1,13 @@
+<div class="bases-tabs" role="tablist">
+  <button
+    *ngFor="let tab of tabs"
+    role="tab"
+    [attr.aria-selected]="activeTab === tab.value"
+    [disabled]="tab.disabled"
+    class="bases-tabs__tab"
+    [class.bases-tabs__tab--active]="activeTab === tab.value"
+    (click)="selectTab(tab.value)"
+  >
+    {{ tab.label }}
+  </button>
+</div>

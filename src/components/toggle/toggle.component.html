@@ -1,0 +1,15 @@
+<label class="bases-toggle" [class.bases-toggle--disabled]="disabled">
+  <button
+    [id]="toggleId"
+    type="button"
+    role="switch"
+    [attr.aria-checked]="checked"
+    [disabled]="disabled"
+    class="bases-toggle__track"
+    [class.bases-toggle__track--on]="checked"
+    (click)="toggle()"
+  >
+    <span class="bases-toggle__thumb" [class.bases-toggle__thumb--on]="checked"></span>
+  </button>
+  <span *ngIf="label" class="bases-toggle__label">{{ label }}</span>
+</label>

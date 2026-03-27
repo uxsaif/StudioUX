@@ -1,0 +1,36 @@
+@import '../../styles/tokens';
+
+.bases-card {
+  border-radius: $border-radius-sm;
+  overflow: hidden;
+  font-family: $font-family-primary;
+
+  &--default {
+    background-color: $surface-primary;
+    border: $border-width-sm solid $border-default;
+    box-shadow: $shadow-md;
+  }
+
+  &--outlined {
+    background-color: $surface-primary;
+    border: $border-width-sm solid $border-default;
+  }
+
+  &--flat {
+    background-color: $surface-secondary;
+  }
+
+  &__header {
+    padding: $space-3 $space-4;
+    border-bottom: $border-width-sm solid $border-default;
+  }
+
+  &__body {
+    padding: $space-3 $space-4;
+  }
+
+  &__footer {
+    padding: $space-3 $space-4;
+    border-top: $border-width-sm solid $border-default;
+  }
+}

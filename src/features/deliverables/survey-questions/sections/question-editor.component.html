@@ -1,0 +1,73 @@
+<div class="question-editor">
+  <!-- Question text -->
+  <div class="question-editor__field">
+    <label class="question-editor__label">Question Text</label>
+    <textarea
+      class="question-editor__textarea"
+      rows="3"
+      [value]="question.text"
+      placeholder="Enter your question…"
+      (input)="onTextChange($any($event.target).value)"
+    ></textarea>
+  </div>
+
+  <!-- Type + Category row -->
+  <div class="question-editor__row">
+    <bases-select
+      label="Question Type"
+      [options]="questionTypes"
+      [value]="question.type"
+      selectId="q-type"
+      (valueChange)="onTypeChange($event)"
+      class="question-editor__half"
+    ></bases-select>
+
+    <bases-input
+      label="Category"
+      [value]="question.category"
+      placeholder="e.g. Purchase Intent"
+      inputId="q-category"
+      (input)="onCategoryChange($any($event.target).value)"
+      class="question-editor__half"
+    ></bases-input>
+  </div>
+
+  <!-- Required toggle -->
+  <bases-checkbox
+    label="Required question"
+    [checked]="question.required"
+    (checkedChange)="onRequiredChange($event)"
+    checkboxId="q-required"
+  ></bases-checkbox>
+
+  <!-- Answer options (if applicable) -->
+  <div *ngIf="hasOptions" class="question-editor__options">
+    <label class="question-editor__label">Answer Options</label>
+
+    <div
+      *ngFor="let opt of question.options; let i = index; trackBy: trackByIndex"
+      class="question-editor__option-row"
+    >
+      <span class="question-editor__option-num">{{ i + 1 }}.</span>
+      <input
+        type="text"
+        class="question-editor__option-input"
+        [value]="opt"
+        (input)="onOptionChange(i, $any($event.target).value)"
+      />
+      <button
+        class="question-editor__option-remove"
+        aria-label="Remove option"
+        (click)="removeOption(i)"
+      >
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <bases-button variant="primitive" size="sm" (click)="addOption()">
+      + Add Option
+    </bases-button>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+@import '../../styles/tokens';
+
+.bases-input {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+
+  &__label {
+    font-family: $font-family-primary;
+    font-size: $font-size-100;
+    font-weight: $font-weight-bold;
+    color: $font-color-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__field {
+    width: 100%;
+    padding: 6px $space-3;
+    border: $border-width-sm solid $border-default;
+    border-radius: $border-radius-sm;
+    font-family: $font-family-primary;
+    font-size: $font-size-200;
+    color: $font-color-primary;
+    background-color: $surface-primary;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder {
+      color: $font-color-tertiary;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $gray-500;
+      box-shadow: 0 0 0 2px $gray-300;
+    }
+
+    &:disabled {
+      background-color: $gray-100;
+      color: $gray-400;
+      cursor: not-allowed;
+    }
+
+    &--error {
+      border-color: $color-error;
+
+      &:focus {
+        box-shadow: 0 0 0 2px rgba($color-error, 0.2);
+      }
+    }
+  }
+
+  &__error {
+    font-family: $font-family-primary;
+    font-size: $font-size-100;
+    color: $color-error;
+    margin: 0;
+  }
+
+  &__helper {
+    font-family: $font-family-primary;
+    font-size: $font-size-100;
+    color: $font-color-tertiary;
+    margin: 0;
+  }
+}

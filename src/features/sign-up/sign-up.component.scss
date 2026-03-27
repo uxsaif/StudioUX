@@ -1,0 +1,70 @@
+@import '../../styles/tokens';
+
+.sign-up-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $surface-secondary;
+  padding: $space-4;
+  font-family: $font-family-primary;
+
+  bases-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  &__title {
+    font-size: $font-size-500;
+    font-weight: $font-weight-bold;
+    color: $font-color-primary;
+    margin: 0;
+  }
+
+  &__subtitle {
+    margin: $space-1 0 0;
+    font-size: $font-size-200;
+    color: $font-color-secondary;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-2;
+    margin-top: $space-2;
+  }
+
+  &__footer-text {
+    font-size: $font-size-100;
+    color: $font-color-tertiary;
+    text-align: center;
+    margin: 0;
+  }
+
+  &__link {
+    color: $gray-800;
+    font-weight: $font-weight-bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__dialog-text {
+    font-size: $font-size-200;
+    color: $font-color-secondary;
+    margin: 0;
+  }
+
+  &__dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $space-4;
+  }
+}

@@ -1,0 +1,49 @@
+<!-- Data table — row labels (col 1) + concept data columns -->
+<div class="data-table">
+
+  <!-- Column 1: Row labels -->
+  <div class="data-table__label-col">
+    <!-- Empty header cell (aligns with concept headers) -->
+    <div class="data-table__header-cell data-table__header-cell--empty"></div>
+
+    <!-- Data rows -->
+    <div class="data-table__cell data-table__cell--label" *ngFor="let row of rows">
+      {{ row.label }}
+    </div>
+
+    <!-- Spacer row -->
+    <div class="data-table__cell data-table__cell--spacer"></div>
+
+    <!-- Summary rows (right-aligned labels) -->
+    <div class="data-table__cell data-table__cell--summary-label" *ngFor="let row of summaryRows">
+      {{ row.label }}
+    </div>
+  </div>
+
+  <!-- Concept data columns -->
+  <div class="data-table__data-col" *ngFor="let concept of concepts; let i = index">
+
+    <!-- Column header: badge + concept name + sample size -->
+    <div class="data-table__header-cell">
+      <div class="data-table__header-content">
+        <span class="data-table__badge">{{ concept.letter }}</span>
+        <span class="data-table__concept-name">{{ concept.name }}</span>
+        <span class="data-table__sample-size">n={{ concept.sampleSize }}</span>
+      </div>
+    </div>
+
+    <!-- Data rows -->
+    <div class="data-table__cell data-table__cell--value" *ngFor="let row of rows">
+      <span class="data-table__sig" *ngIf="hasSigLetters(row.values[i])">{{ row.values[i].sigLetters }}</span>
+      {{ row.values[i].percentage }}%
+    </div>
+
+    <!-- Spacer row -->
+    <div class="data-table__cell data-table__cell--spacer"></div>
+
+    <!-- Summary rows -->
+    <div class="data-table__cell data-table__cell--value" *ngFor="let row of summaryRows">
+      {{ row.values[i].percentage }}%
+    </div>
+  </div>
+</div>

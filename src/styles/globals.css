@@ -1,0 +1,25 @@
+/*
+  BASES Design System — global baseline.
+  Import this in angular.json styles array or main styles.scss.
+*/
+
+@import './tokens';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-300;
+  line-height: $line-height-300;
+  color: $font-color-primary;
+  background-color: $surface-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

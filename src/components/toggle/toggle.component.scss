@@ -1,0 +1,64 @@
+@import '../../styles/tokens';
+
+.bases-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-family: $font-family-primary;
+  font-size: $font-size-200;
+  color: $font-color-primary;
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    color: $font-color-tertiary;
+    cursor: not-allowed;
+  }
+
+  &__track {
+    position: relative;
+    display: inline-flex;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: $border-radius-full;
+    background-color: $gray-300;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &--on {
+      background-color: $gray-800;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px $surface-primary, 0 0 0 4px $gray-400;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__thumb {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: $border-radius-full;
+    background: $surface-primary;
+    box-shadow: $shadow-sm;
+    transform: translateX(2px) translateY(2px);
+    transition: transform $transition-fast;
+
+    &--on {
+      transform: translateX(18px) translateY(2px);
+    }
+  }
+
+  &__label {
+    line-height: $line-height-200;
+  }
+}

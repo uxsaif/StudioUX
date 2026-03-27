@@ -1,0 +1,68 @@
+<!-- Filters bar — Concepts + filter links (left) | chart type toggles (right) -->
+<div class="filters-bar">
+  <div class="filters-bar__left">
+    <!-- Data driver -->
+    <div class="filters-bar__data-driver">
+      <svg class="filters-bar__icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" stroke="#707276" stroke-width="1.2"/>
+        <circle cx="6" cy="6" r="2" fill="#707276"/>
+      </svg>
+      <a class="filters-bar__link">Concepts</a>
+    </div>
+
+    <span class="filters-bar__divider"></span>
+
+    <!-- Filter links -->
+    <div class="filters-bar__filters">
+      <svg class="filters-bar__icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M1 1h10L7.5 5.5V10L4.5 11V5.5L1 1z" stroke="#707276" stroke-width="1.2"/>
+      </svg>
+      <a class="filters-bar__link" *ngFor="let link of filterLinks">{{ link.label }}</a>
+    </div>
+  </div>
+
+  <div class="filters-bar__right">
+    <!-- Chart type buttons -->
+    <div class="filters-bar__chart-types">
+      <button
+        *ngFor="let ct of chartTypes"
+        class="filters-bar__chart-btn"
+        [class.filters-bar__chart-btn--active]="activeChartType === ct.type"
+        [attr.aria-label]="ct.label"
+        (click)="setChartType(ct.type)"
+      >
+        <!-- Table icon -->
+        <svg *ngIf="ct.type === 'table'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="2" width="14" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="1" y1="5.5" x2="15" y2="5.5" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="1" y1="8.5" x2="15" y2="8.5" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="1" y1="11.5" x2="15" y2="11.5" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="5.5" y1="2" x2="5.5" y2="14" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <!-- Bar chart icon -->
+        <svg *ngIf="ct.type === 'bar'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="2" y="8" width="3" height="6" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="6.5" y="4" width="3" height="10" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="11" y="2" width="3" height="12" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <!-- Pie chart icon -->
+        <svg *ngIf="ct.type === 'pie'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 2V8L13.2 5" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </button>
+    </div>
+
+    <span class="filters-bar__divider"></span>
+
+    <!-- Options button -->
+    <button class="filters-bar__chart-btn" aria-label="Options" (click)="optionsClick.emit()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+    </button>
+  </div>
+</div>

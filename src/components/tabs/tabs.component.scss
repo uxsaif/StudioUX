@@ -1,0 +1,41 @@
+@import '../../styles/tokens';
+
+.bases-tabs {
+  display: flex;
+  border-bottom: $border-width-sm solid $border-default;
+  font-family: $font-family-primary;
+
+  &__tab {
+    padding: $space-2 $space-4;
+    font-size: $font-size-200;
+    font-weight: $font-weight-medium;
+    color: $font-color-secondary;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -$border-width-sm;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color $transition-fast, border-color $transition-fast;
+
+    &:hover:not(:disabled) {
+      color: $font-color-primary;
+      background-color: $gray-50;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px $gray-300;
+    }
+
+    &:disabled {
+      color: $font-color-tertiary;
+      cursor: not-allowed;
+    }
+
+    &--active {
+      color: $font-color-primary;
+      border-bottom-color: $gray-800;
+    }
+  }
+}

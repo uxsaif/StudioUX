@@ -1,0 +1,40 @@
+@import '../../styles/tokens';
+
+.bases-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-family: $font-family-primary;
+  font-size: $font-size-200;
+  color: $font-color-primary;
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    color: $font-color-tertiary;
+    cursor: not-allowed;
+  }
+
+  &__input {
+    width: $icon-size-md;
+    height: $icon-size-md;
+    border: $border-width-sm solid $border-default;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    accent-color: $gray-800;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px $gray-300;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__label {
+    line-height: $line-height-200;
+  }
+}

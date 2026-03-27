@@ -1,0 +1,24 @@
+<div class="bases-textarea">
+  <label *ngIf="label" [attr.for]="textareaId" class="bases-textarea__label">
+    {{ label }}
+  </label>
+
+  <textarea
+    [id]="textareaId"
+    [rows]="rows"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [attr.aria-invalid]="error ? true : null"
+    [attr.aria-describedby]="error ? textareaId + '-error' : helperText ? textareaId + '-helper' : null"
+    [class.bases-textarea__field--error]="error"
+    class="bases-textarea__field"
+  ></textarea>
+
+  <p *ngIf="error" [id]="textareaId + '-error'" class="bases-textarea__error" role="alert">
+    {{ error }}
+  </p>
+
+  <p *ngIf="!error && helperText" [id]="textareaId + '-helper'" class="bases-textarea__helper">
+    {{ helperText }}
+  </p>
+</div>

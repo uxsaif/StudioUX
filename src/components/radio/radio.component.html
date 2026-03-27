@@ -1,0 +1,13 @@
+<label [attr.for]="radioId" class="bases-radio" [class.bases-radio--disabled]="disabled">
+  <input
+    [id]="radioId"
+    type="radio"
+    [name]="name"
+    [value]="value"
+    [checked]="checked"
+    [disabled]="disabled"
+    class="bases-radio__input"
+    (change)="onChange()"
+  />
+  <span *ngIf="label" class="bases-radio__label">{{ label }}</span>
+</label>

@@ -1,0 +1,71 @@
+@import '../../styles/tokens';
+
+.bases-select {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+
+  &__label {
+    font-family: $font-family-primary;
+    font-size: $font-size-100;
+    font-weight: $font-weight-bold;
+    color: $font-color-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+
+  &__field {
+    width: 100%;
+    appearance: none;
+    padding: 6px $space-8 6px $space-3;
+    border: $border-width-sm solid $border-default;
+    border-radius: $border-radius-sm;
+    font-family: $font-family-primary;
+    font-size: $font-size-200;
+    color: $font-color-primary;
+    background-color: $surface-primary;
+    cursor: pointer;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $gray-500;
+      box-shadow: 0 0 0 2px $gray-300;
+    }
+
+    &:disabled {
+      background-color: $gray-100;
+      color: $gray-400;
+      cursor: not-allowed;
+    }
+
+    &--error {
+      border-color: $color-error;
+      &:focus {
+        box-shadow: 0 0 0 2px rgba($color-error, 0.2);
+      }
+    }
+  }
+
+  &__chevron {
+    position: absolute;
+    right: $space-2;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $icon-size-md;
+    height: $icon-size-md;
+    color: $icon-default;
+    pointer-events: none;
+  }
+
+  &__error {
+    font-family: $font-family-primary;
+    font-size: $font-size-100;
+    color: $color-error;
+    margin: 0;
+  }
+}

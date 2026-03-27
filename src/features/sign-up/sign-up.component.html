@@ -1,0 +1,60 @@
+<div class="sign-up-page">
+  <bases-card variant="default">
+    <bases-card-header>
+      <h1 class="sign-up-page__title">Create account</h1>
+      <p class="sign-up-page__subtitle">Start your free trial today.</p>
+    </bases-card-header>
+
+    <bases-card-body>
+      <form (submit)="onSubmit($event)" class="sign-up-page__form" novalidate>
+        <bases-input
+          label="Full name"
+          placeholder="Jane Smith"
+          [error]="errors['name'] || ''"
+          inputId="signup-name"
+          (input)="name = $any($event.target).value"
+        ></bases-input>
+
+        <bases-input
+          label="Email address"
+          type="email"
+          placeholder="jane@example.com"
+          [error]="errors['email'] || ''"
+          helperText="We'll never share your email."
+          inputId="signup-email"
+          (input)="email = $any($event.target).value"
+        ></bases-input>
+
+        <bases-checkbox
+          label="I agree to the terms and conditions"
+          [checked]="agreed"
+          (checkedChange)="agreed = $event"
+          checkboxId="signup-agree"
+        ></bases-checkbox>
+
+        <div class="sign-up-page__actions">
+          <bases-button type="submit" variant="basic" [loading]="loading">
+            {{ loading ? 'Creating…' : 'Sign up' }}
+          </bases-button>
+          <bases-button variant="flat">Cancel</bases-button>
+        </div>
+      </form>
+    </bases-card-body>
+
+    <bases-card-footer>
+      <p class="sign-up-page__footer-text">
+        Already have an account?
+        <a href="#login" class="sign-up-page__link">Log in</a>
+      </p>
+    </bases-card-footer>
+  </bases-card>
+
+  <bases-dialog [open]="success" title="Welcome!" (closed)="closeDialog()">
+    <p class="sign-up-page__dialog-text">
+      Your account has been created. Check your email for next steps.
+    </p>
+    <div class="sign-up-page__dialog-actions">
+      <bases-button variant="basic" (click)="closeDialog()">Got it</bases-button>
+    </div>
+  </bases-dialog>
+</div>

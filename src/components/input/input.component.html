@@ -1,0 +1,24 @@
+<div class="bases-input">
+  <label *ngIf="label" [attr.for]="inputId" class="bases-input__label">
+    {{ label }}
+  </label>
+
+  <input
+    [id]="inputId"
+    [type]="type"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [attr.aria-invalid]="error ? true : null"
+    [attr.aria-describedby]="error ? inputId + '-error' : helperText ? inputId + '-helper' : null"
+    [class.bases-input__field--error]="error"
+    class="bases-input__field"
+  />
+
+  <p *ngIf="error" [id]="inputId + '-error'" class="bases-input__error" role="alert">
+    {{ error }}
+  </p>
+
+  <p *ngIf="!error && helperText" [id]="inputId + '-helper'" class="bases-input__helper">
+    {{ helperText }}
+  </p>
+</div>
