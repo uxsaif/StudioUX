@@ -700,16 +700,18 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
           <label class="chart-options__item">
             <input type="checkbox" id="chkMeanFav" checked /> Mean Fav
           </label>
-          <div class="chart-options__sub-header">Decimals</div>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="0" id="metDec0" checked /> No decimal places
-          </label>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="1" id="metDec1" /> 1 decimal place
-          </label>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="2" id="metDec2" /> 2 decimal places
-          </label>
+          <div id="metricsDecimalsGroup">
+            <div class="chart-options__sub-header">Decimals</div>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="0" id="metDec0" checked /> No decimal places
+            </label>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="1" id="metDec1" /> 1 decimal place
+            </label>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="2" id="metDec2" /> 2 decimal places
+            </label>
+          </div>
         </div>
       </div>
 
@@ -1398,6 +1400,16 @@ document.querySelectorAll('#chartOptionsOverlay input').forEach(input => {
     else if (currentView === 'bar') switchView('bar');
   });
 });
+
+// Toggle Metrics Decimals visibility based on Average & Mean Fav checkboxes
+function toggleMetricsDecimals() {
+  const avg = document.getElementById('chkAverage').checked;
+  const mf  = document.getElementById('chkMeanFav').checked;
+  document.getElementById('metricsDecimalsGroup').style.display = (avg || mf) ? '' : 'none';
+}
+document.getElementById('chkAverage').addEventListener('change', toggleMetricsDecimals);
+document.getElementById('chkMeanFav').addEventListener('change', toggleMetricsDecimals);
+toggleMetricsDecimals();
 
 // Chart Options drawer toggle
 const overlay = document.getElementById('chartOptionsOverlay');

@@ -41,16 +41,18 @@
           <label class="chart-options__item">
             <input type="checkbox" [(ngModel)]="showMeanFav" /> Mean Fav
           </label>
-          <div class="chart-options__sub-header">Decimals</div>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="0" [(ngModel)]="metricsDecimals" /> No decimal places
-          </label>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="1" [(ngModel)]="metricsDecimals" /> 1 decimal place
-          </label>
-          <label class="chart-options__item">
-            <input type="radio" name="metricsDecimals" value="2" [(ngModel)]="metricsDecimals" /> 2 decimal places
-          </label>
+          <ng-container *ngIf="showAverage || showMeanFav">
+            <div class="chart-options__sub-header">Decimals</div>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="0" [(ngModel)]="metricsDecimals" /> No decimal places
+            </label>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="1" [(ngModel)]="metricsDecimals" /> 1 decimal place
+            </label>
+            <label class="chart-options__item">
+              <input type="radio" name="metricsDecimals" value="2" [(ngModel)]="metricsDecimals" /> 2 decimal places
+            </label>
+          </ng-container>
         </div>
       </div>
 
