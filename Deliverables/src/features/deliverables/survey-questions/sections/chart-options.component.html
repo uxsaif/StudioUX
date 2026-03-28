@@ -63,7 +63,7 @@
           <label class="chart-options__item">
             <input type="checkbox" [(ngModel)]="mentionLessThan5" /> Mention &lt; 5%
           </label>
-          <label class="chart-options__item chart-options__item--indent">
+          <label *ngIf="mentionLessThan5" class="chart-options__item chart-options__item--indent">
             <input type="checkbox" [(ngModel)]="combineAllOther" /> Combine as 'All other answers'
           </label>
           <label class="chart-options__item">

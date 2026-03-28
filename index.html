@@ -735,9 +735,11 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
           <label class="chart-options__item">
             <input type="checkbox" id="chkMention5" checked /> Mention &lt; 5%
           </label>
-          <label class="chart-options__item chart-options__item--indent">
-            <input type="checkbox" id="chkCombine" /> Combine as 'All other answers'
-          </label>
+          <div id="combineGroup">
+            <label class="chart-options__item chart-options__item--indent">
+              <input type="checkbox" id="chkCombine" /> Combine as 'All other answers'
+            </label>
+          </div>
           <label class="chart-options__item">
             <input type="checkbox" id="chkAggregate" /> Aggregate
           </label>
@@ -1410,6 +1412,13 @@ function toggleMetricsDecimals() {
 document.getElementById('chkAverage').addEventListener('change', toggleMetricsDecimals);
 document.getElementById('chkMeanFav').addEventListener('change', toggleMetricsDecimals);
 toggleMetricsDecimals();
+
+// Toggle Combine sub-option visibility based on Mention < 5%
+function toggleCombineOption() {
+  document.getElementById('combineGroup').style.display = document.getElementById('chkMention5').checked ? '' : 'none';
+}
+document.getElementById('chkMention5').addEventListener('change', toggleCombineOption);
+toggleCombineOption();
 
 // Chart Options drawer toggle
 const overlay = document.getElementById('chartOptionsOverlay');
