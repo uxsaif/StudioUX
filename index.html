@@ -222,9 +222,31 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   font-size: 13px; line-height: 13px; color: var(--color-primary); cursor: pointer;
 }
 .chart-options__item--indent { padding-left: 32px; }
-.chart-options__item input[type="radio"],
+.chart-options__item input[type="radio"] {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; margin: 0; cursor: pointer;
+  border: 1.5px solid var(--color-primary); border-radius: 50%;
+  background: var(--surface-primary); position: relative; flex-shrink: 0;
+}
+.chart-options__item input[type="radio"]:checked {
+  border-color: var(--nav-active);
+}
+.chart-options__item input[type="radio"]:checked::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--nav-active);
+}
 .chart-options__item input[type="checkbox"] {
-  width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--nav-active);
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; margin: 0; cursor: pointer;
+  border: 1.5px solid var(--color-primary); border-radius: 2px;
+  background: var(--surface-primary); position: relative; flex-shrink: 0;
+}
+.chart-options__item input[type="checkbox"]:checked {
+  background: var(--surface-primary); border-color: var(--nav-active);
+}
+.chart-options__item input[type="checkbox"]:checked::after {
+  content: ''; position: absolute; left: 3px; top: 0.5px; width: 6px; height: 9px;
+  border: solid var(--nav-active); border-width: 0 2px 2px 0; transform: rotate(45deg);
 }
 .chart-options__item label { cursor: pointer; }
 .chart-options__section-content { padding-bottom: 16px; }
@@ -471,6 +493,86 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   width: 1px; flex-shrink: 0; background: var(--border-default);
   margin: 0 15.5px;
 }
+
+/* ── Pie Chart View ──────────────────────────────── */
+.pie-chart-view { display: none; flex-direction: column; width: 100%; }
+.pie-chart-view--active { display: flex; }
+.pie-chart-cards {
+  display: flex; width: 100%; background: var(--surface-primary); overflow: hidden;
+}
+.pie-chart-card {
+  flex: 1 0 0; min-width: 0; display: flex; flex-direction: column;
+  align-items: center; padding: 8px 8px 24px; position: relative;
+  overflow: visible;
+}
+.pie-chart-card__border {
+  position: absolute; top: 0; bottom: 0; right: 0; width: 1px; background: #ccc;
+}
+.pie-chart-card__badge {
+  width: 16px; height: 16px; border-radius: 4px; background: #373737;
+  color: #fff; font-size: 11px; font-weight: 700; line-height: 16px;
+  text-align: center; margin-bottom: 8px;
+}
+.pie-chart-card__title {
+  font-size: 13px; font-weight: 700; line-height: 16px; color: var(--color-primary);
+  text-align: center; margin-bottom: 0;
+}
+.pie-chart-card__sample {
+  font-size: 13px; line-height: 24px; color: var(--color-tertiary); text-align: center;
+}
+.pie-chart-card__header {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-end; width: 100%;
+}
+.pie-chart-card__chart {
+  position: relative; width: 183px; height: 183px; margin-top: 32px;
+  overflow: visible;
+}
+.pie-chart-card__chart svg { width: 183px; height: 183px; }
+.pie-chart-card__label-overlay {
+  position: absolute; top: 0; bottom: 0; pointer-events: none; overflow: visible;
+}
+.pie-chart-card__labels {
+  position: absolute; top: 0; left: -80px; right: -80px; bottom: -40px; pointer-events: none;
+}
+.pie-chart-label {
+  position: absolute; display: flex; flex-direction: column; gap: 2px; pointer-events: none;
+  overflow: hidden;
+}
+.pie-chart-label--right { align-items: flex-start; left: 0; }
+.pie-chart-label--left { align-items: flex-end; text-align: right; right: 0; }
+.pie-chart-label__pct { font-size: 13px; font-weight: 700; line-height: 13px; }
+.pie-chart-label__text {
+  font-size: 11px; line-height: 11px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.pie-chart-label__sig { font-size: 11px; font-weight: 700; line-height: 11px; color: var(--color-tertiary); }
+.pie-legend {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 16px 16px; padding: 32px 32px 24px;
+}
+.pie-legend__item {
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+.pie-legend__swatch {
+  width: 12px; height: 12px; flex-shrink: 0;
+}
+.pie-legend__label {
+  font-size: 13px; line-height: 13px; color: var(--color-primary);
+}
+.pie-carousel { position: relative; }
+.pie-carousel__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 28px; height: 28px;
+  border-radius: 50%; border: 1px solid var(--border-default); background: var(--surface-primary);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.pie-carousel__arrow:hover { background: var(--surface-secondary); }
+.pie-carousel__arrow--left { left: -14px; }
+.pie-carousel__arrow--right { right: -14px; }
+.pie-carousel__arrow svg { width: 14px; height: 14px; fill: none; stroke: var(--color-primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pie-carousel__arrow[disabled] { opacity: 0.3; cursor: default; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -658,6 +760,9 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
       <!-- Vertical bar chart view -->
       <div class="vbar-view" id="vbarChartView"></div>
 
+      <!-- Pie chart view -->
+      <div class="pie-chart-view" id="pieChartView"></div>
+
     </div>
   </div>
 </div>
@@ -728,6 +833,43 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
         </div>
       </div>
 
+      <!-- VISUAL ELEMENTS (pie only) -->
+      <div class="chart-options__section" data-view="pie">
+        <div class="chart-options__section-title">Visual Elements</div>
+        <div class="chart-options__section-content">
+          <div class="chart-options__sub-header">Data Label</div>
+          <label class="chart-options__item">
+            <input type="radio" name="pieDataLabel" value="always" id="pieLblAlways" checked /> Always Show
+          </label>
+          <div id="pieLblAlwaysSub">
+            <label class="chart-options__item chart-options__item--indent">
+              <input type="radio" name="pieLabelContent" value="valueAndLabel" id="pieLblValLabel" checked /> Show value and label
+            </label>
+            <label class="chart-options__item chart-options__item--indent">
+              <input type="radio" name="pieLabelContent" value="valueOnly" id="pieLblValOnly" /> Show value
+            </label>
+          </div>
+          <label class="chart-options__item">
+            <input type="radio" name="pieDataLabel" value="hover" id="pieLblHover" /> On Hover
+          </label>
+          <div id="pieLblHoverSub" style="display:none;">
+            <label class="chart-options__item chart-options__item--indent">
+              <input type="radio" name="pieLabelContent" value="valueAndLabel" /> Show value and label
+            </label>
+            <label class="chart-options__item chart-options__item--indent">
+              <input type="radio" name="pieLabelContent" value="valueOnly" /> Show value
+            </label>
+          </div>
+          <div class="chart-options__sub-header" style="margin-top: 8px;">Legend</div>
+          <label class="chart-options__item">
+            <input type="radio" name="pieLegend" value="show" id="pieLegShow" /> Show
+          </label>
+          <label class="chart-options__item">
+            <input type="radio" name="pieLegend" value="hide" id="pieLegHide" checked /> Hide
+          </label>
+        </div>
+      </div>
+
       <!-- ADVANCED OPTIONS -->
       <div class="chart-options__section">
         <div class="chart-options__section-title">Advanced Options</div>
@@ -751,7 +893,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
         <div class="chart-options__section-title">Indicators</div>
         <div class="chart-options__section-content">
           <label class="chart-options__item">
-            <input type="checkbox" id="chkStatTesting" checked /> Stat Testing
+            <input type="checkbox" id="chkStatTesting" /> Stat Testing
           </label>
         </div>
       </div>
@@ -814,9 +956,9 @@ const rows = [
   { label: 'Luxury redefined, not by cost but how it makes you feel', values: [1, 1, 1, 1], sig: ['','','',''] },
   { label: 'Does luxe differently', values: [1, 1, 1, 1], sig: ['','','',''] },
   { label: 'Rooted in Indulgence', values: [2, 2, 2, 2], sig: ['','','',''] },
-  { label: 'Crafted for the senses', values: [2, 2, 2, 2], sig: ['','','',''] },
+  { label: 'Crafted for the senses', values: [2, 8, 2, 2], sig: ['','','',''] },
   { label: 'Transforms the everyday into a rich expressive ritual', values: [2, 2, 2, 2], sig: ['','','ABD',''] },
-  { label: 'Delivers cleansing moisture', values: [1, 1, 1, 1], sig: ['','','',''] },
+  { label: 'Delivers cleansing moisture', values: [1, 7, 1, 1], sig: ['','','',''] },
   { label: 'Fragrances that pop', values: [1, 1, 1, 1], sig: ['','','',''] },
   { label: 'Textures that delight', values: [2, 2, 2, 2], sig: ['','','','ABC'] },
   { label: 'Provides a sensorial experience', values: [1, 1, 1, 1], sig: ['','','',''] },
@@ -840,6 +982,9 @@ function getOptions() {
     statTesting: document.getElementById('chkStatTesting').checked,
     showScale: document.getElementById('chkShowScale').checked,
     layout: document.querySelector('input[name="layout"]:checked').value,
+    pieDataLabel: document.querySelector('input[name="pieDataLabel"]:checked').value,
+    pieLabelContent: document.querySelector('input[name="pieLabelContent"]:checked').value,
+    pieLegend: document.querySelector('input[name="pieLegend"]:checked').value,
   };
 }
 
@@ -1345,6 +1490,7 @@ const pieBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Pie c
 const dataTable = document.getElementById('dataTable');
 const barChartView = document.getElementById('barChartView');
 const vbarChartView = document.getElementById('vbarChartView');
+const pieChartView = document.getElementById('pieChartView');
 
 function switchView(view) {
   currentView = view;
@@ -1357,6 +1503,7 @@ function switchView(view) {
   dataTable.style.display = 'none';
   barChartView.classList.remove('bar-chart-view--active');
   vbarChartView.classList.remove('vbar-view--active');
+  pieChartView.classList.remove('pie-chart-view--active');
 
   // Reset scroll to top
   document.querySelector('.sq-page').scrollTop = 0;
@@ -1378,12 +1525,380 @@ function switchView(view) {
       updateDrawerSections('bar');
       buildBarChart();
     }
+  } else if (view === 'pie') {
+    pieBtn.classList.add('filters-bar__chart-btn--active');
+    pieChartView.classList.add('pie-chart-view--active');
+    updateDrawerSections('pie');
+    buildPieChart();
   }
 }
 
 tableBtn.addEventListener('click', () => switchView('table'));
 barBtn.addEventListener('click', () => switchView('bar'));
 if (pieBtn) pieBtn.addEventListener('click', () => switchView('pie'));
+
+// ── Pie Chart Colors ──
+let pieCarouselOffset = 0;
+const PIE_COLORS = [
+  '#675895','#A082F3','#204188','#4697E2','#CB4B7A',
+  '#FFB500','#F06E2D','#03A577','#3265D2','#0C644A',
+  '#B37F01','#83304E','#DA5D4C'
+];
+
+function buildPieChart() {
+  const opts = getOptions();
+  const container = document.getElementById('pieChartView');
+
+  let displayRows = [...rows];
+
+  // When "Combine as All other answers" is checked, merge <5% items into one
+  const combineSmall = opts.mentionLt5 && opts.combineAll;
+  // When "Mention < 5%" is unchecked, exclude <5% items entirely (pie adjusts proportionally)
+  const excludeSmall = !opts.mentionLt5;
+
+  // Build chart list: if aggregate is on, prepend aggregate chart
+  const chartEntries = [];
+  if (opts.aggregate) {
+    const aggValues = displayRows.map(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      return Math.round(avg);
+    });
+    chartEntries.push({
+      letter: '', name: 'Aggregate', sample: concepts.reduce((s, c) => s + c.sample, 0),
+      isAggregate: true, aggValues
+    });
+  }
+  concepts.forEach((c, ci) => {
+    chartEntries.push({ ...c, ci, isAggregate: false });
+  });
+  const maxVisible = 4;
+  if (pieCarouselOffset > chartEntries.length - maxVisible) pieCarouselOffset = Math.max(0, chartEntries.length - maxVisible);
+  if (pieCarouselOffset < 0) pieCarouselOffset = 0;
+  const visibleCharts = chartEntries.slice(pieCarouselOffset, pieCarouselOffset + maxVisible);
+  const showCarousel = chartEntries.length > maxVisible;
+
+  // Track labels already shown "always" across charts (left to right)
+  const seenAlwaysLabels = new Set();
+
+  let html = '<div class="pie-carousel">';
+  if (showCarousel) {
+    html += `<button class="pie-carousel__arrow pie-carousel__arrow--left" onclick="pieCarouselOffset--;buildPieChart()"${pieCarouselOffset === 0 ? ' disabled' : ''}><svg viewBox="0 0 14 14"><polyline points="9,2 5,7 9,12"/></svg></button>`;
+    html += `<button class="pie-carousel__arrow pie-carousel__arrow--right" onclick="pieCarouselOffset++;buildPieChart()"${pieCarouselOffset >= chartEntries.length - maxVisible ? ' disabled' : ''}><svg viewBox="0 0 14 14"><polyline points="5,2 9,7 5,12"/></svg></button>`;
+  }
+  html += '<div class="pie-chart-cards">';
+
+  visibleCharts.forEach((entry, idx) => {
+    const isLast = idx === visibleCharts.length - 1;
+    const ci = entry.isAggregate ? -1 : entry.ci;
+
+    let slices;
+    if (entry.isAggregate) {
+      // Use aggregate values
+      if (combineSmall) {
+        const above = displayRows.filter((r, ri) => entry.aggValues[ri] >= 5).map((r, ri) => {
+          const origIdx = rows.indexOf(r);
+          return { label: r.label, value: entry.aggValues[rows.indexOf(r)], colorIdx: origIdx, sig: '' };
+        });
+        const belowSum = displayRows.filter((r, ri) => entry.aggValues[rows.indexOf(r)] < 5).reduce((s, r) => s + entry.aggValues[rows.indexOf(r)], 0);
+        if (belowSum > 0) above.push({ label: 'All other answers', value: belowSum, colorIdx: -1, sig: '' });
+        slices = above.sort((a, b) => b.value - a.value);
+      } else if (excludeSmall) {
+        slices = displayRows.filter(r => entry.aggValues[rows.indexOf(r)] >= 5).map(r => {
+          const origIdx = rows.indexOf(r);
+          return { label: r.label, value: entry.aggValues[origIdx], colorIdx: origIdx, sig: '' };
+        }).sort((a, b) => b.value - a.value);
+      } else {
+        slices = displayRows.map((r, ri) => ({
+          label: r.label, value: entry.aggValues[ri], colorIdx: ri, sig: ''
+        })).sort((a, b) => b.value - a.value);
+      }
+    } else if (combineSmall) {
+      const above = displayRows.filter(r => r.values[ci] >= 5).map((r, ri) => {
+        const origIdx = rows.indexOf(r);
+        return { label: r.label, value: r.values[ci], colorIdx: origIdx, sig: r.sig[ci] };
+      });
+      const belowSum = displayRows.filter(r => r.values[ci] < 5).reduce((s, r) => s + r.values[ci], 0);
+      if (belowSum > 0) {
+        above.push({ label: 'All other answers', value: belowSum, colorIdx: -1, sig: '' });
+      }
+      slices = above.sort((a, b) => b.value - a.value);
+    } else if (excludeSmall) {
+      // Only include items >= 5%; pie fills proportionally with just these
+      slices = displayRows.filter(r => r.values[ci] >= 5).map(r => {
+        const origIdx = rows.indexOf(r);
+        return { label: r.label, value: r.values[ci], colorIdx: origIdx, sig: r.sig[ci] };
+      }).sort((a, b) => b.value - a.value);
+    } else {
+      slices = displayRows.map((r, ri) => ({
+        label: r.label, value: r.values[ci], colorIdx: ri, sig: r.sig[ci]
+      })).sort((a, b) => b.value - a.value);
+    }
+
+    const total = slices.reduce((s, sl) => s + sl.value, 0);
+
+    html += '<div class="pie-chart-card">';
+    if (!isLast) html += '<div class="pie-chart-card__border"></div>';
+    html += '<div class="pie-chart-card__header">';
+    if (entry.isAggregate) {
+      html += `<div class="pie-chart-card__title">Aggregate</div>`;
+      html += `<div class="pie-chart-card__sample">n=${entry.sample}</div>`;
+    } else {
+      html += `<div class="pie-chart-card__badge">${esc(entry.letter)}</div>`;
+      html += `<div class="pie-chart-card__title">${entry.name.replace(/\n/g, '<br>')}</div>`;
+      html += `<div class="pie-chart-card__sample">n=${entry.sample}</div>`;
+    }
+    html += '</div>'; // .pie-chart-card__header
+    html += '<div class="pie-chart-card__chart">';
+
+    // Build SVG pie
+    const cx = 91.5, cy = 91.5, r = 91.5;
+    let paths = '';
+    let cumAngle = -90; // start at top
+    const sliceAngles = []; // track midpoints for labels
+
+    slices.forEach((sl, si) => {
+      const pct = total > 0 ? sl.value / total : 0;
+      const angle = pct * 360;
+      const startAngle = cumAngle;
+      const endAngle = cumAngle + angle;
+      const midAngle = cumAngle + angle / 2;
+      sliceAngles.push({ ...sl, startAngle, endAngle, midAngle, pct });
+
+      if (pct <= 0) { cumAngle = endAngle; return; }
+
+      const largeArc = angle > 180 ? 1 : 0;
+      const rad = Math.PI / 180;
+      const x1 = cx + r * Math.cos(startAngle * rad);
+      const y1 = cy + r * Math.sin(startAngle * rad);
+      const x2 = cx + r * Math.cos(endAngle * rad);
+      const y2 = cy + r * Math.sin(endAngle * rad);
+
+      const color = sl.colorIdx === -1 ? '#707276' : PIE_COLORS[sl.colorIdx % PIE_COLORS.length];
+      paths += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} Z" fill="${color}" stroke="#fff" stroke-width="0.5" data-slice-idx="${si}" style="cursor:pointer"/>`;
+      cumAngle = endAngle;
+    });
+
+    html += `<svg viewBox="0 0 183 183">${paths}</svg>`;
+
+    // Add labels for slices (when data labels are visible)
+    const showLabels = opts.pieDataLabel !== 'hide';
+    const isHoverMode = opts.pieDataLabel === 'hover';
+    const showValueOnly = opts.pieLabelContent === 'valueOnly';
+    html += '<div class="pie-chart-label-container" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:visible;">';
+    // Include all slices with pct > 0 for hover support; mark small ones
+    const labelSlices = showLabels ? sliceAngles.filter(s => s.pct > 0) : [];
+
+    // Build connector lines SVG
+    let connectors = '';
+    // Collect label data to render at card level
+    const labelData = [];
+    labelSlices.forEach(sl => {
+      const rad = Math.PI / 180;
+      const midRad = sl.midAngle * rad;
+      // Point on pie edge
+      const edgeX = cx + r * Math.cos(midRad);
+      const edgeY = cy + r * Math.sin(midRad);
+      // Elbow point (extend outward)
+      const elbowR = r + 18;
+      const elbowX = cx + elbowR * Math.cos(midRad);
+      const elbowY = cy + elbowR * Math.sin(midRad);
+      const isRight = Math.cos(midRad) >= 0;
+      // Horizontal end point
+      const endX = isRight ? elbowX + 20 : elbowX - 20;
+      const endY = elbowY;
+
+      const color = sl.colorIdx === -1 ? '#707276' : PIE_COLORS[sl.colorIdx % PIE_COLORS.length];
+      connectors += `<g class="pie-connector" data-slice-idx="${sliceAngles.indexOf(sl)}">`;
+      connectors += `<line x1="${edgeX}" y1="${edgeY}" x2="${elbowX}" y2="${elbowY}" stroke="${color}" stroke-width="1"/>`;
+      connectors += `<line x1="${elbowX}" y1="${elbowY}" x2="${endX}" y2="${endY}" stroke="${color}" stroke-width="1"/>`;
+      connectors += '</g>';
+
+      labelData.push({ sl, endX, endY, isRight, color, sig: sl.sig || '', isSmall: sl.pct < 0.05, isRepeat: false });
+    });
+
+    // Mark repeat labels (already shown always in a previous chart)
+    labelData.forEach(d => {
+      if (!d.isSmall && seenAlwaysLabels.has(d.sl.label)) {
+        d.isRepeat = true;
+      }
+    });
+    // Register non-small labels as "seen" for subsequent charts
+    labelData.forEach(d => {
+      if (!d.isSmall) seenAlwaysLabels.add(d.sl.label);
+    });
+
+    html += `<svg style="position:absolute;top:0;left:0;width:183px;height:183px;overflow:visible;pointer-events:none;" viewBox="0 0 183 183">${connectors}</svg>`;
+    html += '</div>'; // close label-container inside chart
+
+    // Render labels inside chart div using label-overlay (positioned by JS post-render)
+    html += `<div class="pie-chart-card__label-overlay" data-hover-mode="${isHoverMode ? '1' : ''}" data-labels='${JSON.stringify(labelData.map((d, di) => ({endX:d.endX, endY:d.endY, isRight:d.isRight, color:d.color, pct:d.sl.pct, label:d.sl.label, valDec:opts.valDecimals, showValueOnly, sig:d.sig, statTesting:opts.statTesting, sliceIdx: sliceAngles.indexOf(d.sl), isSmall: d.isSmall, isRepeat: d.isRepeat}))).replace(/'/g, '&#39;')}'></div>`;
+
+    html += '</div>'; // close .pie-chart-card__chart
+
+    html += '</div>'; // .pie-chart-card
+  });
+
+  html += '</div>'; // .pie-chart-cards
+  html += '</div>'; // .pie-carousel
+
+  // Shared legend (alphabetically sorted, preserving original color index)
+  if (opts.pieLegend !== 'hide') {
+    html += '<div class="pie-legend">';
+    let legendItems;
+    if (combineSmall) {
+      // Show only >= 5% items + "All other answers"
+      const above = displayRows.filter(r => r.values.some(v => v >= 5));
+      legendItems = above.map(r => ({ label: r.label, colorIdx: rows.indexOf(r) }));
+      const hasBelow = displayRows.some(r => r.values.every(v => v < 5));
+      if (hasBelow) legendItems.push({ label: 'All other answers', colorIdx: -1 });
+    } else if (excludeSmall) {
+      // Only show >= 5% items in legend
+      const above = displayRows.filter(r => r.values.some(v => v >= 5));
+      legendItems = above.map(r => ({ label: r.label, colorIdx: rows.indexOf(r) }));
+    } else {
+      legendItems = displayRows.map((r, ri) => ({ label: r.label, colorIdx: ri }));
+    }
+    legendItems.sort((a, b) => a.label.localeCompare(b.label));
+    legendItems.forEach(item => {
+      const color = item.colorIdx === -1 ? '#707276' : PIE_COLORS[item.colorIdx % PIE_COLORS.length];
+      html += `<div class="pie-legend__item">`;
+      html += `<div class="pie-legend__swatch" style="background:${color}"></div>`;
+      html += `<span class="pie-legend__label">${esc(item.label)}</span>`;
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+
+  // Equalize header heights so all pie charts align horizontally
+  const headers = container.querySelectorAll('.pie-chart-card__header');
+  let maxH = 0;
+  headers.forEach(h => { h.style.minHeight = ''; maxH = Math.max(maxH, h.offsetHeight); });
+  headers.forEach(h => { h.style.minHeight = maxH + 'px'; });
+
+  // Post-render: position label overlays using actual card widths
+  container.querySelectorAll('.pie-chart-card__label-overlay').forEach(overlay => {
+    const data = JSON.parse(overlay.dataset.labels);
+    const chartDiv = overlay.parentElement; // .pie-chart-card__chart
+    const card = chartDiv.parentElement; // .pie-chart-card
+    const cardW = card.offsetWidth;
+    const margin = (cardW - 183) / 2; // distance from chart edge to card edge
+
+    overlay.style.left = -margin + 'px';
+    overlay.style.right = -margin + 'px';
+
+    data.forEach(d => {
+      const pctStr = d.valDec > 0 ? d.pct * 100 : Math.round(d.pct * 100);
+      const pctFmt = (typeof pctStr === 'number' && pctStr % 1 !== 0) ? pctStr.toFixed(d.valDec) + '%' : pctStr + '%';
+      const labelOffsetY = d.showValueOnly ? 6.5 : 14; // center single line vs offset for two lines
+      const align = d.isRight ? 'pie-chart-label--right' : 'pie-chart-label--left';
+
+      // endX is chart-local (0-183). In overlay coords, chart starts at 'margin' px from left.
+      const endXInOverlay = margin + d.endX;
+      let style;
+      if (d.isRight) {
+        style = `left:${endXInOverlay + 4}px;right:4px;`;
+      } else {
+        style = `left:4px;right:${cardW - endXInOverlay + 4}px;`;
+      }
+
+      const el = document.createElement('div');
+      el.className = 'pie-chart-label ' + align;
+      el.setAttribute('data-slice-idx', d.sliceIdx);
+      const isHoverOnly = d.isSmall || d.isRepeat;
+      el.setAttribute('data-is-small', isHoverOnly ? '1' : '');
+      const hideForHover = overlay.dataset.hoverMode === '1';
+      const hideInAlways = isHoverOnly && !hideForHover; // in 'always' mode, hide small & repeat labels
+      el.style.cssText = style + `top:${d.endY - labelOffsetY}px;color:${d.color}` + ((hideForHover || hideInAlways) ? ';display:none' : '');
+      const sigHtml = (d.statTesting && d.sig) ? `<span class="pie-chart-label__sig">${esc(d.sig)}</span>` : '';
+      el.innerHTML = `<span class="pie-chart-label__pct">${pctFmt}</span>${d.showValueOnly ? '' : `<span class="pie-chart-label__text">${esc(d.label)}</span>`}${sigHtml}`;
+      overlay.appendChild(el);
+    });
+
+    // Resolve overlapping labels: push apart vertically and update connectors
+    ['pie-chart-label--right', 'pie-chart-label--left'].forEach(cls => {
+      const labels = Array.from(overlay.querySelectorAll('.' + cls))
+        .filter(el => el.style.display !== 'none');
+      if (labels.length < 2) return;
+      // Sort by top position
+      labels.sort((a, b) => parseFloat(a.style.top) - parseFloat(b.style.top));
+      const minGap = 2; // px between labels
+      for (let i = 1; i < labels.length; i++) {
+        const prevBottom = labels[i - 1].getBoundingClientRect().bottom;
+        const curTop = labels[i].getBoundingClientRect().top;
+        if (curTop < prevBottom + minGap) {
+          const shift = prevBottom + minGap - curTop;
+          const newTop = parseFloat(labels[i].style.top) + shift;
+          labels[i].style.top = newTop + 'px';
+          // Update connector endpoint to match new label position
+          const idx = labels[i].getAttribute('data-slice-idx');
+          const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${idx}"]`);
+          if (conn) {
+            const d = data.find(dd => String(dd.sliceIdx) === idx);
+            if (d) {
+              const labelOffsetY = d.showValueOnly ? 6.5 : 14;
+              const newEndY = newTop + labelOffsetY;
+              const lines = conn.querySelectorAll('line');
+              if (lines.length === 2) {
+                lines[0].setAttribute('y2', newEndY);
+                lines[1].setAttribute('y1', newEndY);
+                lines[1].setAttribute('y2', newEndY);
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Wire up hover events: in hover mode for all slices, in always mode for <5% slices
+    {
+      const chartDiv = overlay.parentElement;
+      const hoverMode = overlay.dataset.hoverMode === '1';
+      // Hide connectors for hover-only items by default
+      chartDiv.querySelectorAll('.pie-connector').forEach(g => {
+        if (hoverMode) { g.style.display = 'none'; return; }
+        // In always mode, hide connectors for small slices
+        const idx = g.getAttribute('data-slice-idx');
+        const matchLabel = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
+        if (matchLabel && matchLabel.getAttribute('data-is-small') === '1') g.style.display = 'none';
+      });
+      const svgEl = chartDiv.querySelector('svg');
+      svgEl.querySelectorAll('path[data-slice-idx]').forEach(path => {
+        path.addEventListener('mouseenter', () => {
+          const idx = path.getAttribute('data-slice-idx');
+          if (hoverMode) {
+            // Show only hovered
+            chartDiv.querySelectorAll('.pie-connector').forEach(g => {
+              g.style.display = g.getAttribute('data-slice-idx') === idx ? '' : 'none';
+            });
+            overlay.querySelectorAll('.pie-chart-label').forEach(lbl => {
+              lbl.style.display = lbl.getAttribute('data-slice-idx') === idx ? '' : 'none';
+            });
+          } else {
+            // Always mode: show hovered small slice
+            const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${idx}"]`);
+            const lbl = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
+            if (conn) conn.style.display = '';
+            if (lbl) lbl.style.display = '';
+          }
+        });
+        path.addEventListener('mouseleave', () => {
+          const idx = path.getAttribute('data-slice-idx');
+          if (hoverMode) {
+            chartDiv.querySelectorAll('.pie-connector').forEach(g => g.style.display = 'none');
+            overlay.querySelectorAll('.pie-chart-label').forEach(lbl => lbl.style.display = 'none');
+          } else {
+            // Always mode: re-hide small slice labels
+            const lbl = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
+            const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${idx}"]`);
+            if (lbl && lbl.getAttribute('data-is-small') === '1') { lbl.style.display = 'none'; if (conn) conn.style.display = 'none'; }
+          }
+        });
+      });
+    }
+  });
+}
 
 // Re-equalize on resize so rows stay aligned at any viewport width
 window.addEventListener('resize', () => {
@@ -1396,11 +1911,12 @@ window.addEventListener('resize', () => {
 });
 
 // ── Wire up chart option changes → rebuild active view ──
-document.querySelectorAll('#chartOptionsOverlay input').forEach(input => {
-  input.addEventListener('change', () => {
+document.getElementById('chartOptionsOverlay').addEventListener('change', (e) => {
+  if (e.target.matches('input')) {
     if (currentView === 'table') buildTable();
     else if (currentView === 'bar') switchView('bar');
-  });
+    else if (currentView === 'pie') buildPieChart();
+  }
 });
 
 // Toggle Metrics Decimals visibility based on Average & Mean Fav checkboxes
@@ -1417,6 +1933,21 @@ toggleMetricsDecimals();
 function toggleCombineOption() {
   document.getElementById('combineGroup').style.display = document.getElementById('chkMention5').checked ? '' : 'none';
 }
+
+// Toggle Data Label sub-options based on selected radio
+function togglePieDataLabelSubs() {
+  const val = document.querySelector('input[name="pieDataLabel"]:checked').value;
+  document.getElementById('pieLblAlwaysSub').style.display = val === 'always' ? '' : 'none';
+  document.getElementById('pieLblHoverSub').style.display = val === 'hover' ? '' : 'none';
+  // When switching modes, ensure the visible sub-group has a checked radio
+  const activeSubId = val === 'always' ? 'pieLblAlwaysSub' : 'pieLblHoverSub';
+  const activeSub = document.getElementById(activeSubId);
+  if (!activeSub.querySelector('input[name="pieLabelContent"]:checked')) {
+    activeSub.querySelector('input[name="pieLabelContent"][value="valueAndLabel"]').checked = true;
+  }
+}
+document.querySelectorAll('input[name="pieDataLabel"]').forEach(r => r.addEventListener('change', togglePieDataLabelSubs));
+togglePieDataLabelSubs();
 document.getElementById('chkMention5').addEventListener('change', toggleCombineOption);
 toggleCombineOption();
 
@@ -1425,7 +1956,8 @@ const overlay = document.getElementById('chartOptionsOverlay');
 const optionsBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Options"]');
 const closeBtn = document.getElementById('chartOptionsClose');
 
-optionsBtn.addEventListener('click', () => {
+optionsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
   overlay.style.top = optionsBtn.getBoundingClientRect().top + 'px';
   overlay.classList.add('chart-options-overlay--open');
 });
@@ -1433,7 +1965,13 @@ closeBtn.addEventListener('click', () => {
   overlay.classList.remove('chart-options-overlay--open');
 });
 overlay.addEventListener('click', (e) => {
-  if (e.target === overlay) overlay.classList.remove('chart-options-overlay--open');
+  e.stopPropagation();
+});
+document.addEventListener('click', (e) => {
+  if (overlay.classList.contains('chart-options-overlay--open') &&
+      !overlay.contains(e.target) && !optionsBtn.contains(e.target)) {
+    overlay.classList.remove('chart-options-overlay--open');
+  }
 });
 
 // Show scrollbar only while scrolling
