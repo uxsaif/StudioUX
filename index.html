@@ -124,6 +124,14 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   color: var(--color-primary); font-weight: 700;
   border-bottom-color: var(--color-primary);
 }
+.sq-page__nav-actions {
+  margin-left: auto; display: flex; align-items: center; gap: 4px;
+}
+.sq-page__nav-action {
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border: none; border-radius: 3px; background: none; cursor: pointer;
+}
+.sq-page__nav-action:hover { background: var(--gray-100); }
 
 /* ── Body ──────────────────────────────────────────── */
 .sq-page__body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
@@ -428,10 +436,11 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 }
 .vbar-nav {
   width: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; user-select: none; font-size: 18px; color: var(--color-primary);
+  cursor: pointer; user-select: none; align-self: center;
 }
-.vbar-nav:hover { color: var(--color-secondary); }
-.vbar-nav--disabled { opacity: 0.3; pointer-events: none; }
+.vbar-nav:hover svg { stroke: var(--color-primary); }
+.vbar-nav--disabled { opacity: 0.3; pointer-events: none; cursor: default; }
+.vbar-nav svg { width: 16px; height: 16px; fill: none; stroke: #707276; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
 .vbar-scale {
   position: absolute; left: 16px; top: 0; bottom: 0;
@@ -563,15 +572,14 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 }
 .pie-carousel { position: relative; }
 .pie-carousel__arrow {
-  position: absolute; top: 50%; transform: translateY(-50%); width: 28px; height: 28px;
-  border-radius: 50%; border: 1px solid var(--border-default); background: var(--surface-primary);
+  position: absolute; top: 50%; transform: translateY(-50%); width: 16px; height: 16px;
+  background: none; border: none;
   display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-.pie-carousel__arrow:hover { background: var(--surface-secondary); }
+.pie-carousel__arrow:hover svg { stroke: var(--color-primary); }
 .pie-carousel__arrow--left { left: -14px; }
 .pie-carousel__arrow--right { right: -14px; }
-.pie-carousel__arrow svg { width: 14px; height: 14px; fill: none; stroke: var(--color-primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pie-carousel__arrow svg { width: 16px; height: 16px; fill: none; stroke: #707276; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .pie-carousel__arrow[disabled] { opacity: 0.3; cursor: default; pointer-events: none; }
 </style>
 </head>
@@ -588,17 +596,17 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
       </div>
       <div class="sq-page__brand-actions">
         <button class="sq-page__brand-icon-btn" aria-label="Comments">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h12v9H5l-3 3V2z" stroke="#000" stroke-width="1.2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 1.99861C0 0.894809 0.894809 0 1.99861 0H13.9903C15.0941 0 15.9889 0.894809 15.9889 1.99861V10.9924C15.9889 12.0962 15.0941 12.991 13.9903 12.991H6.99514L3.99722 15.9889V12.991H1.99861C0.894809 12.991 0 12.0962 0 10.9924V1.99861ZM14.9896 1.99861C14.9896 1.44671 14.5422 0.999306 13.9903 0.999306H1.99861C1.44671 0.999306 0.999306 1.44671 0.999306 1.99861V10.9924C0.999306 11.5443 1.44671 11.9917 1.99861 11.9917H4.99653V13.4906L6.49549 11.9917H13.9903C14.5422 11.9917 14.9896 11.5443 14.9896 10.9924V1.99861Z" fill="#707276"/></svg>
         </button>
         <span class="sq-page__brand-divider"></span>
         <div class="sq-page__brand-hello">
           <span class="sq-page__brand-hello-text">Hello</span>
           <span class="sq-page__brand-hello-user">User</span>
-          <svg class="sq-page__brand-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#373737" stroke-width="1.2"/></svg>
+          <svg class="sq-page__brand-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.7067 3.04L8 9.74733L1.33333 3L0 4.33333L8 12.3333L16 4.33333L14.7067 3.04Z" fill="#373737"/></svg>
         </div>
         <span class="sq-page__brand-divider"></span>
         <button class="sq-page__brand-icon-btn" aria-label="Help">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#000" stroke-width="1.2"/><path d="M6 6a2 2 0 113 1.94V9" stroke="#000" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.5" fill="#000"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.001 16C3.589 16 0 12.41 0 7.999C0 3.588 3.589 0 8.001 0C12.412 0 16 3.588 16 7.999C16 12.41 12.412 16 8.001 16ZM8.001 2C4.692 2 2 4.691 2 7.999C2 11.308 4.692 14 8.001 14C11.31 14 14 11.308 14 7.999C14 4.691 11.309 2 8.001 2ZM5.226 5.188C5.369 4.84 5.568 4.538 5.824 4.283C6.079 4.028 6.388 3.829 6.75 3.685C7.112 3.541 7.516 3.471 7.963 3.471C8.541 3.471 9.022 3.547 9.408 3.697C9.794 3.847 10.105 4.036 10.341 4.26C10.577 4.485 10.746 4.727 10.847 4.986C10.948 5.245 11 5.486 11 5.71C11 6.082 10.949 6.387 10.848 6.627C10.746 6.867 10.62 7.072 10.47 7.242C10.319 7.413 10.153 7.558 9.97 7.678C9.787 7.798 9.615 7.918 9.452 8.038C9.289 8.158 9.144 8.295 9.018 8.45C8.892 8.605 8.813 8.798 8.78 9.03V9.47H7.134V8.949C7.158 8.616 7.226 8.338 7.335 8.113C7.445 7.888 7.573 7.697 7.719 7.539C7.865 7.381 8.02 7.242 8.182 7.126C8.344 7.011 8.494 6.895 8.633 6.778C8.771 6.662 8.883 6.534 8.968 6.394C9.053 6.255 9.092 6.082 9.083 5.872C9.083 5.517 8.992 5.253 8.809 5.083C8.627 4.913 8.372 4.827 8.047 4.827C7.827 4.827 7.638 4.868 7.48 4.949C7.323 5.031 7.193 5.14 7.091 5.276C6.99 5.411 6.915 5.569 6.866 5.751C6.817 5.933 6.793 6.129 6.793 6.337H5C5.008 5.919 5.083 5.537 5.226 5.188ZM8.922 10.529H6.922V12.529H8.922V10.529Z" fill="#707276"/></svg>
         </button>
       </div>
     </div>
@@ -676,6 +684,17 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
     <button class="sq-page__nav-tab">CONCEPTS</button>
     <button class="sq-page__nav-tab sq-page__nav-tab--active">DELIVERABLES</button>
     <button class="sq-page__nav-tab">FILES</button>
+    <div class="sq-page__nav-actions">
+      <button class="sq-page__nav-action" aria-label="Settings">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 8.872V7.052L13.794 6.331L13.273 5.075L14.273 2.96L12.985 1.673L12.744 1.795L10.916 2.724L9.661 2.203L8.872 0H7.052L6.967 0.257L6.331 2.207L5.076 2.727L2.96 1.727L1.672 3.014L1.795 3.255L2.723 5.084L2.203 6.339L0 7.128V8.948L2.207 9.67L2.727 10.924L1.727 13.041L3.014 14.328L3.255 14.205L5.083 13.277L6.338 13.797L7.128 16H8.949L9.033 15.742L9.67 13.793L10.925 13.273L13.04 14.273L14.328 12.986L14.206 12.744L13.277 10.916L13.798 9.66L16 8.872ZM8 10.549C6.592 10.549 5.451 9.408 5.451 8.001C5.451 6.594 6.593 5.451 8 5.451C9.408 5.451 10.55 6.593 10.55 8.001C10.55 9.409 9.408 10.549 8 10.549Z" fill="#707276"/></svg>
+      </button>
+      <button class="sq-page__nav-action" aria-label="Layout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 0H0V4H16V0ZM0 5V16H16V5H0ZM11.8 9H3.8V7H11.8V9Z" fill="#707276"/></svg>
+      </button>
+      <button class="sq-page__nav-action" aria-label="Share">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M13 9.83895C12.151 9.88395 11.388 10.215 10.796 10.737L6 8.34895V7.65295L11 5.16895C11.504 5.66095 12.194 5.96395 12.955 5.96395C12.971 5.96395 12.986 5.96395 13.002 5.96395C13.018 5.96395 13.04 5.96495 13.063 5.96495C14.685 5.96495 16 4.64995 16 3.02795C16 3.01195 16 2.99695 16 2.98095C15.989 1.33495 14.65 0.00195312 13 0.00195312C11.35 0.00195312 10.011 1.33395 10 2.98195V3.38095L5.1 5.86495C4.598 5.31395 3.878 4.96895 3.078 4.96895C3.051 4.96895 3.024 4.96895 2.996 4.96995C2.981 4.96895 2.959 4.96895 2.937 4.96895C1.315 4.96895 0 6.28395 0 7.90595C0 7.92195 0 7.93695 0 7.95295C0 7.96395 0 7.97995 0 7.99495C0 9.61695 1.315 10.932 2.937 10.932C2.959 10.932 2.981 10.932 3.003 10.931C3.758 10.93 4.455 10.668 5.006 10.23L9.999 12.72V13.018C10.01 14.667 11.349 15.999 12.999 15.999C14.649 15.999 15.988 14.667 15.999 13.019C16 12.996 16 12.97 16 12.944C16 11.265 14.669 9.89695 13.005 9.83795L13 9.83895ZM3 8.84495C2.982 8.84595 2.961 8.84695 2.94 8.84695C2.42 8.84695 1.998 8.42495 1.998 7.90495C1.998 7.88595 1.999 7.86695 2 7.84895C1.999 7.83495 1.998 7.81695 1.998 7.79795C1.998 7.27795 2.42 6.85595 2.94 6.85595C2.961 6.85595 2.982 6.85695 3.003 6.85795C3.018 6.85695 3.039 6.85595 3.06 6.85595C3.58 6.85595 4.002 7.27795 4.002 7.79795C4.002 7.81695 4.001 7.83595 4 7.85395C4.001 7.86795 4.002 7.88595 4.002 7.90495C4.002 8.42495 3.58 8.84695 3.06 8.84695C3.039 8.84695 3.018 8.84595 2.997 8.84495H3Z" fill="#707276"/></svg>
+      </button>
+    </div>
   </nav>
 
   <!-- Deliverable toolbar -->
@@ -719,20 +738,20 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
         <div class="filters-bar__chart-types">
           <!-- Table (active) -->
           <button class="filters-bar__chart-btn filters-bar__chart-btn--active" aria-label="Table view">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="5.5" x2="15" y2="5.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8.5" x2="15" y2="8.5" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="11.5" x2="15" y2="11.5" stroke="currentColor" stroke-width="1.2"/><line x1="5.5" y1="2" x2="5.5" y2="14" stroke="currentColor" stroke-width="1.2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.5H0V0.5H16V15.5ZM5 11.5H1V14.5H5V11.5ZM5 7.5H1V10.5H5V7.5ZM5 3.5H1V6.5H5V3.5ZM15 11.5H6V14.5H15V11.5ZM15 7.5H6V10.5H15V7.5ZM15 3.5H6V6.5H15V3.5Z" fill="currentColor"/></svg>
           </button>
           <!-- Bar -->
           <button class="filters-bar__chart-btn" aria-label="Bar chart">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="8" width="3" height="6" stroke="currentColor" stroke-width="1.2"/><rect x="6.5" y="4" width="3" height="10" stroke="currentColor" stroke-width="1.2"/><rect x="11" y="2" width="3" height="12" stroke="currentColor" stroke-width="1.2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10.6504 14.0098H11.9004V4.66992H13.9004V14.0098H16V15.0098H0V14.0098H2.15039V3.63184H4.15039V14.0098H5.40039V5.70801H7.40039V14.0098H8.65039V0.518555H10.6504V14.0098Z" fill="currentColor"/></svg>
           </button>
           <!-- Pie -->
           <button class="filters-bar__chart-btn" aria-label="Pie chart">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 2V8L13.2 5" stroke="currentColor" stroke-width="1.2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(#pieclip)"><path d="M6.71209 0.57912L6.71169 8.58591L12.5271 13.9314L12.061 14.2605C10.958 15.0393 9.62551 15.482 8.22705 15.5581C6.65253 15.6438 5.08381 15.2591 3.7286 14.4392C2.37203 13.6185 1.32306 12.4188 0.703459 11.0063C0.0834211 9.59283 -0.0810644 8.02482 0.24721 6.50266C0.575319 4.98112 1.37337 3.61005 2.52507 2.55925C3.44638 1.71864 4.56614 1.10903 5.79092 0.787934L6.09925 0.713705L6.71209 0.57912ZM15.4753 9.12347L15.3431 9.69361C15.1206 10.654 14.707 11.5615 14.122 12.3709L13.9207 12.637L13.3851 13.2843L8.6959 9.12347H15.4753ZM7.81421 0.511047L8.34895 0.546816C10.2238 0.6721 11.9604 1.45573 13.2693 2.7316C14.4316 3.86462 15.1962 5.32701 15.4433 6.92865L15.4835 7.23055L15.5571 8.04917H7.81421V0.511047Z" fill="currentColor"/></g><defs><clipPath id="pieclip"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>
           </button>
         </div>
         <span class="filters-bar__divider"></span>
         <button class="filters-bar__chart-btn" aria-label="Options">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(#optclip)"><path d="M3.42871 9.14258C5.32219 9.14265 6.85742 10.6778 6.85742 12.5713C6.85741 14.4648 5.32219 15.9999 3.42871 16C1.53517 16 9.53508e-06 14.4648 0 12.5713C0 10.6777 1.53516 9.14258 3.42871 9.14258ZM12.5713 9.14258C14.4648 9.14265 16 10.6778 16 12.5713C16 14.4648 14.4648 15.9999 12.5713 16C10.6777 16 9.14259 14.4648 9.14258 12.5713C9.14258 10.6777 10.6777 9.14258 12.5713 9.14258ZM3.42871 10.2852C2.16635 10.2852 1.14258 11.3089 1.14258 12.5713C1.14259 13.8336 2.16635 14.8574 3.42871 14.8574C4.69101 14.8573 5.71386 13.8336 5.71387 12.5713C5.71387 11.309 4.69101 10.2852 3.42871 10.2852ZM12.5713 10.2852C11.3089 10.2852 10.2852 11.3089 10.2852 12.5713C10.2852 13.8336 11.3089 14.8574 12.5713 14.8574C13.8336 14.8573 14.8564 13.8336 14.8564 12.5713C14.8564 11.309 13.8336 10.2852 12.5713 10.2852ZM3.42871 11.4277C4.05969 11.428 4.57129 11.9403 4.57129 12.5713C4.57111 13.2022 4.05957 13.7136 3.42871 13.7139C2.79764 13.7139 2.28534 13.2023 2.28516 12.5713C2.28516 11.9401 2.79753 11.4277 3.42871 11.4277ZM6.85742 0V6.85742H0V0H6.85742ZM15.9287 1.42676L11.5225 5.96777L9.07227 3.44238L10.1094 2.37305L11.5225 3.82812L14.8916 0.357422L15.9287 1.42676ZM1.14258 5.71387H5.71387V1.14258H1.14258V5.71387Z" fill="currentColor"/></g><defs><clipPath id="optclip"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>
         </button>
       </div>
   </div>
@@ -1071,7 +1090,11 @@ function buildTable() {
     html += '</div></div>';
     displayRows.forEach(r => {
       const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
-      html += `<div class="data-table__cell data-table__cell--value">${fmtPct(avg, opts.valDecimals)}</div>`;
+      if (!opts.mentionLt5 && avg < 5) {
+        html += '<div class="data-table__cell data-table__cell--value" style="text-align:right">---</div>';
+      } else {
+        html += `<div class="data-table__cell data-table__cell--value">${fmtPct(avg, opts.valDecimals)}</div>`;
+      }
     });
     if (visibleSummary.length > 0) {
       html += '<div class="data-table__cell data-table__cell--spacer"></div>';
@@ -1095,12 +1118,16 @@ function buildTable() {
 
     // Data rows — use valDecimals
     displayRows.forEach(r => {
-      const formatted = fmtPct(r.values[ci], opts.valDecimals);
-      const sigLetters = r.sig[ci];
-      if (opts.statTesting && sigLetters) {
-        html += `<div class="data-table__cell data-table__cell--value"><span class="data-table__sig">${sigLetters}</span>${formatted}</div>`;
+      if (!opts.mentionLt5 && r.values[ci] < 5) {
+        html += '<div class="data-table__cell data-table__cell--value" style="text-align:right">---</div>';
       } else {
-        html += `<div class="data-table__cell data-table__cell--value">${formatted}</div>`;
+        const formatted = fmtPct(r.values[ci], opts.valDecimals);
+        const sigLetters = r.sig[ci];
+        if (opts.statTesting && sigLetters) {
+          html += `<div class="data-table__cell data-table__cell--value"><span class="data-table__sig">${sigLetters}</span>${formatted}</div>`;
+        } else {
+          html += `<div class="data-table__cell data-table__cell--value">${formatted}</div>`;
+        }
       }
     });
 
@@ -1207,17 +1234,19 @@ function buildBarChart() {
     // Bar rows
     displayRows.forEach(r => {
       const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
-      const formatted = fmtPct(avg, opts.valDecimals);
       const isCombined = r.label === 'All other answers';
       const barColor = isCombined ? '#707276' : '#675895';
+      const showHyphen = !opts.mentionLt5 && avg < 5;
 
       html += '<div class="bar-chart-row">';
       html += `<span class="bar-chart-row__label">${esc(r.label)}</span>`;
       html += '<div class="bar-chart-row__bar-wrap">';
       html += '<div class="bar-chart-row__bar-frame">';
-      html += `<div class="bar-chart-row__bar" style="width:${avg}%;background:${barColor}"></div>`;
+      if (!showHyphen) {
+        html += `<div class="bar-chart-row__bar" style="width:${avg}%;background:${barColor}"></div>`;
+      }
       html += '</div>';
-      html += `<span class="bar-chart-row__value" style="color:#707276">${formatted}</span>`;
+      html += `<span class="bar-chart-row__value" style="color:#707276">${showHyphen ? '---' : fmtPct(avg, opts.valDecimals)}</span>`;
       html += '</div>';
       html += '<span class="bar-chart-row__sig"></span>';
       html += '</div>';
@@ -1250,10 +1279,10 @@ function buildBarChart() {
     // Bar rows
     displayRows.forEach(r => {
       const val = r.values[ci];
-      const formatted = fmtPct(val, opts.valDecimals);
       const sigLetters = opts.statTesting ? r.sig[ci] : '';
       const isCombined = r.label === 'All other answers';
       const barColor = isCombined ? '#707276' : '#675895';
+      const showHyphen = !opts.mentionLt5 && val < 5;
 
       html += '<div class="bar-chart-row">';
       if (!opts.aggregate && ci === 0) {
@@ -1263,11 +1292,13 @@ function buildBarChart() {
       }
       html += '<div class="bar-chart-row__bar-wrap">';
       html += '<div class="bar-chart-row__bar-frame">';
-      html += `<div class="bar-chart-row__bar" style="width:${val}%;background:${barColor}"></div>`;
+      if (!showHyphen) {
+        html += `<div class="bar-chart-row__bar" style="width:${val}%;background:${barColor}"></div>`;
+      }
       html += '</div>';
-      html += `<span class="bar-chart-row__value" style="color:#707276">${formatted}</span>`;
+      html += `<span class="bar-chart-row__value" style="color:#707276">${showHyphen ? '---' : fmtPct(val, opts.valDecimals)}</span>`;
       html += '</div>';
-      if (sigLetters) {
+      if (sigLetters && !showHyphen) {
         html += `<span class="bar-chart-row__sig">${esc(sigLetters)}</span>`;
       } else {
         html += '<span class="bar-chart-row__sig"></span>';
@@ -1326,13 +1357,8 @@ function buildVerticalBarChart() {
   const opts = getOptions();
   const container = document.getElementById('vbarChartView');
 
-  // Filter rows same as table
-  let displayRows;
-  if (opts.mentionLt5) {
-    displayRows = rows.map(r => ({ ...r }));
-  } else {
-    displayRows = rows.filter(r => r.values.some(v => v >= 5)).map(r => ({ ...r }));
-  }
+  // All rows kept; individual columns <5% skipped during render
+  let displayRows = rows.map(r => ({ ...r }));
   if (opts.mentionLt5 && opts.combineAll) {
     const belowRows = displayRows.filter(r => r.values.every(v => v < 5));
     const aboveRows = displayRows.filter(r => !r.values.every(v => v < 5));
@@ -1344,7 +1370,20 @@ function buildVerticalBarChart() {
     }
   }
 
-  const colCount = displayRows.length;
+  // Compute visible column count per card (may differ when mentionLt5 is off)
+  let maxColCount = 0;
+  // Aggregate visible cols
+  const aggVisCols = displayRows.filter(r => {
+    const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+    return opts.mentionLt5 || avg >= 5;
+  }).length;
+  maxColCount = Math.max(maxColCount, aggVisCols);
+  // Per-concept visible cols
+  concepts.forEach((_, ci) => {
+    const visCols = displayRows.filter(r => opts.mentionLt5 || r.values[ci] >= 5).length;
+    maxColCount = Math.max(maxColCount, visCols);
+  });
+  const colCount = maxColCount || displayRows.length;
   // Each column needs ~90px (label cell). Available width per card ~615px (minus 64px left pad).
   const containerW = container.parentElement ? container.parentElement.offsetWidth - 48 : 1326;
   const cardMinW = 64 + colCount * 90;
@@ -1400,7 +1439,7 @@ function buildVerticalBarChart() {
 
   // Left chevron
   const leftDisabled = vbarPage === 0 ? ' vbar-nav--disabled' : '';
-  html += `<div class="vbar-nav${leftDisabled}" id="vbarPrev">&#8249;</div>`;
+  html += `<div class="vbar-nav${leftDisabled}" id="vbarPrev"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></div>`;
 
   // Vertical scale
   if (opts.showScale) {
@@ -1422,6 +1461,7 @@ function buildVerticalBarChart() {
     if (card.type === 'aggregate') {
       displayRows.forEach(r => {
         const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+        if (!opts.mentionLt5 && avg < 5) return;
         const formatted = fmtPct(avg, opts.valDecimals);
         const isCombined = r.label === 'All other answers';
         const barColor = isCombined ? '#707276' : '#675895';
@@ -1441,6 +1481,7 @@ function buildVerticalBarChart() {
       const ci = card.conceptIdx;
       displayRows.forEach(r => {
         const val = r.values[ci];
+        if (!opts.mentionLt5 && val < 5) return;
         const formatted = fmtPct(val, opts.valDecimals);
         const sigLetters = opts.statTesting ? r.sig[ci] : '';
         const isCombined = r.label === 'All other answers';
@@ -1468,7 +1509,7 @@ function buildVerticalBarChart() {
 
   // Right chevron
   const rightDisabled = vbarPage >= totalPages - 1 ? ' vbar-nav--disabled' : '';
-  html += `<div class="vbar-nav${rightDisabled}" id="vbarNext">&#8250;</div>`;
+  html += `<div class="vbar-nav${rightDisabled}" id="vbarNext"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg></div>`;
 
   html += '</div>';
 
@@ -1582,8 +1623,8 @@ function buildPieChart() {
 
   let html = '<div class="pie-carousel">';
   if (showCarousel) {
-    html += `<button class="pie-carousel__arrow pie-carousel__arrow--left" onclick="pieCarouselOffset--;buildPieChart()"${pieCarouselOffset === 0 ? ' disabled' : ''}><svg viewBox="0 0 14 14"><polyline points="9,2 5,7 9,12"/></svg></button>`;
-    html += `<button class="pie-carousel__arrow pie-carousel__arrow--right" onclick="pieCarouselOffset++;buildPieChart()"${pieCarouselOffset >= chartEntries.length - maxVisible ? ' disabled' : ''}><svg viewBox="0 0 14 14"><polyline points="5,2 9,7 5,12"/></svg></button>`;
+    html += `<button class="pie-carousel__arrow pie-carousel__arrow--left" onclick="pieCarouselOffset--;buildPieChart()"${pieCarouselOffset === 0 ? ' disabled' : ''}><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button>`;
+    html += `<button class="pie-carousel__arrow pie-carousel__arrow--right" onclick="pieCarouselOffset++;buildPieChart()"${pieCarouselOffset >= chartEntries.length - maxVisible ? ' disabled' : ''}><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg></button>`;
   }
   html += '<div class="pie-chart-cards">';
 
