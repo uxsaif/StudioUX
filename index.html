@@ -86,7 +86,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
   background: var(--border-default); border: none; cursor: pointer; flex-shrink: 0;
 }
-.sq-page__project-name { font-size: 24px; font-weight: 700; text-transform: uppercase; line-height: 24px; white-space: nowrap; margin-left: 16px; }
+.sq-page__project-name { font-size: 24px; font-weight: 700; text-transform: uppercase; line-height: 24px; white-space: nowrap; margin-left: 16px; color: var(--color-primary); }
 .sq-page__toolbar-icons { display: flex; align-items: center; height: 100%; gap: 20px; }
 .sq-page__toolbar-icon-group { display: flex; align-items: stretch; height: 100%; }
 .sq-page__toolbar-tab {
@@ -537,7 +537,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   position: relative; width: 183px; height: 183px; margin-top: 32px;
   overflow: visible;
 }
-.pie-chart-card__chart svg { width: 183px; height: 183px; }
+.pie-chart-card__chart svg { width: 183px; height: 183px; overflow: visible; }
 .pie-chart-card__label-overlay {
   position: absolute; top: 0; bottom: 0; pointer-events: none; overflow: visible;
 }
@@ -554,7 +554,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 .pie-chart-label__text {
   font-size: 11px; line-height: 11px;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden; text-overflow: ellipsis;
+  overflow: hidden; text-overflow: ellipsis; word-break: break-word; max-width: 100%;
 }
 .pie-chart-label__sig { font-size: 11px; font-weight: 700; line-height: 11px; color: var(--color-tertiary); }
 .pie-legend {
@@ -1357,31 +1357,39 @@ function buildVerticalBarChart() {
   const opts = getOptions();
   const container = document.getElementById('vbarChartView');
 
-  // All rows kept; individual columns <5% skipped during render
+  // All rows kept; per-card combining and <5% skip handled during render
   let displayRows = rows.map(r => ({ ...r }));
-  if (opts.mentionLt5 && opts.combineAll) {
-    const belowRows = displayRows.filter(r => r.values.every(v => v < 5));
-    const aboveRows = displayRows.filter(r => !r.values.every(v => v < 5));
-    if (belowRows.length > 0) {
-      const sumValues = concepts.map((_, ci) =>
-        belowRows.reduce((sum, r) => sum + r.values[ci], 0)
-      );
-      displayRows = [...aboveRows, { label: 'All other answers', values: sumValues, sig: concepts.map(() => '') }];
-    }
-  }
 
-  // Compute visible column count per card (may differ when mentionLt5 is off)
+  // Compute visible column count per card (accounts for combining and <5% skip)
   let maxColCount = 0;
   // Aggregate visible cols
-  const aggVisCols = displayRows.filter(r => {
-    const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
-    return opts.mentionLt5 || avg >= 5;
-  }).length;
-  maxColCount = Math.max(maxColCount, aggVisCols);
+  if (opts.combineAll) {
+    const aboveCount = displayRows.filter(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      return avg >= 5;
+    }).length;
+    const belowCount = displayRows.filter(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      return avg < 5;
+    }).length;
+    maxColCount = Math.max(maxColCount, aboveCount + (belowCount > 0 ? 1 : 0));
+  } else {
+    const aggVisCols = displayRows.filter(r => {
+      const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+      return opts.mentionLt5 || avg >= 5;
+    }).length;
+    maxColCount = Math.max(maxColCount, aggVisCols);
+  }
   // Per-concept visible cols
   concepts.forEach((_, ci) => {
-    const visCols = displayRows.filter(r => opts.mentionLt5 || r.values[ci] >= 5).length;
-    maxColCount = Math.max(maxColCount, visCols);
+    if (opts.combineAll) {
+      const aboveCount = displayRows.filter(r => r.values[ci] >= 5).length;
+      const belowCount = displayRows.filter(r => r.values[ci] < 5).length;
+      maxColCount = Math.max(maxColCount, aboveCount + (belowCount > 0 ? 1 : 0));
+    } else {
+      const visCols = displayRows.filter(r => opts.mentionLt5 || r.values[ci] >= 5).length;
+      maxColCount = Math.max(maxColCount, visCols);
+    }
   });
   const colCount = maxColCount || displayRows.length;
   // Each column needs ~90px (label cell). Available width per card ~615px (minus 64px left pad).
@@ -1459,7 +1467,23 @@ function buildVerticalBarChart() {
     html += '<div class="vbar-card__cols">';
 
     if (card.type === 'aggregate') {
-      displayRows.forEach(r => {
+      // Per-card combine for aggregate: combine rows where avg < 5
+      let cardRows = displayRows;
+      if (opts.combineAll) {
+        const belowRows = cardRows.filter(r => {
+          const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+          return avg < 5;
+        });
+        const aboveRows = cardRows.filter(r => {
+          const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
+          return avg >= 5;
+        });
+        if (belowRows.length > 0) {
+          const sumAvg = belowRows.reduce((s, r) => s + r.values.reduce((a, v) => a + v, 0) / r.values.length, 0);
+          cardRows = [...aboveRows, { label: 'All other answers', values: concepts.map(() => sumAvg), sig: concepts.map(() => '') }];
+        }
+      }
+      cardRows.forEach(r => {
         const avg = r.values.reduce((s, v) => s + v, 0) / r.values.length;
         if (!opts.mentionLt5 && avg < 5) return;
         const formatted = fmtPct(avg, opts.valDecimals);
@@ -1479,7 +1503,20 @@ function buildVerticalBarChart() {
       });
     } else {
       const ci = card.conceptIdx;
-      displayRows.forEach(r => {
+      // Per-card combine for this concept: combine rows where value[ci] < 5
+      let cardRows = displayRows;
+      if (opts.combineAll) {
+        const belowRows = cardRows.filter(r => r.values[ci] < 5);
+        const aboveRows = cardRows.filter(r => r.values[ci] >= 5);
+        if (belowRows.length > 0) {
+          const sumVal = belowRows.reduce((s, r) => s + r.values[ci], 0);
+          const combinedValues = concepts.map(() => 0);
+          combinedValues[ci] = sumVal;
+          const combinedSig = concepts.map(() => '');
+          cardRows = [...aboveRows, { label: 'All other answers', values: combinedValues, sig: combinedSig }];
+        }
+      }
+      cardRows.forEach(r => {
         const val = r.values[ci];
         if (!opts.mentionLt5 && val < 5) return;
         const formatted = fmtPct(val, opts.valDecimals);
@@ -1693,6 +1730,9 @@ function buildPieChart() {
 
     // Build SVG pie
     const cx = 91.5, cy = 91.5, r = 91.5;
+    const hoverRingW = 6; // extra width of hover ring beyond pie edge
+    const outerR = r + hoverRingW;
+    let hoverRings = '';
     let paths = '';
     let cumAngle = -90; // start at top
     const sliceAngles = []; // track midpoints for labels
@@ -1715,11 +1755,19 @@ function buildPieChart() {
       const y2 = cy + r * Math.sin(endAngle * rad);
 
       const color = sl.colorIdx === -1 ? '#707276' : PIE_COLORS[sl.colorIdx % PIE_COLORS.length];
+
+      // Hover ring: annular arc from r to outerR at 35% opacity (overflows viewBox)
+      const ox1 = cx + outerR * Math.cos(startAngle * rad);
+      const oy1 = cy + outerR * Math.sin(startAngle * rad);
+      const ox2 = cx + outerR * Math.cos(endAngle * rad);
+      const oy2 = cy + outerR * Math.sin(endAngle * rad);
+      hoverRings += `<path d="M${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} L${ox2},${oy2} A${outerR},${outerR} 0 ${largeArc} 0 ${ox1},${oy1} Z" fill="${color}" opacity="0.35" data-hover-ring="${si}" style="display:none"/>`;
+
       paths += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} Z" fill="${color}" stroke="#fff" stroke-width="0.5" data-slice-idx="${si}" style="cursor:pointer"/>`;
       cumAngle = endAngle;
     });
 
-    html += `<svg viewBox="0 0 183 183">${paths}</svg>`;
+    html += `<svg viewBox="0 0 183 183">${hoverRings}${paths}</svg>`;
 
     // Add labels for slices (when data labels are visible)
     const showLabels = opts.pieDataLabel !== 'hide';
@@ -1896,10 +1944,76 @@ function buildPieChart() {
     {
       const chartDiv = overlay.parentElement;
       const hoverMode = overlay.dataset.hoverMode === '1';
+
+      // Helper: resolve label overlaps for one side, updating connectors
+      function resolveOverlaps(side) {
+        const labels = Array.from(overlay.querySelectorAll('.' + side))
+          .filter(el => el.style.display !== 'none');
+        if (labels.length < 2) return;
+        labels.sort((a, b) => parseFloat(a.style.top) - parseFloat(b.style.top));
+        const minGap = 2;
+        for (let i = 1; i < labels.length; i++) {
+          const prevBottom = labels[i - 1].getBoundingClientRect().bottom;
+          const curTop = labels[i].getBoundingClientRect().top;
+          if (curTop < prevBottom + minGap) {
+            const shift = prevBottom + minGap - curTop;
+            const newTop = parseFloat(labels[i].style.top) + shift;
+            labels[i].style.top = newTop + 'px';
+            const lidx = labels[i].getAttribute('data-slice-idx');
+            const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${lidx}"]`);
+            if (conn) {
+              const dd = data.find(x => String(x.sliceIdx) === lidx);
+              if (dd) {
+                const offy = dd.showValueOnly ? 6.5 : 14;
+                const newEndY = newTop + offy;
+                const lines = conn.querySelectorAll('line');
+                if (lines.length === 2) {
+                  lines[0].setAttribute('y2', newEndY);
+                  lines[1].setAttribute('y1', newEndY);
+                  lines[1].setAttribute('y2', newEndY);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Store original top positions for labels so we can restore after hover
+      overlay.querySelectorAll('.pie-chart-label').forEach(lbl => {
+        lbl.setAttribute('data-orig-top', lbl.style.top);
+      });
+      // Store original connector endpoints
+      chartDiv.querySelectorAll('.pie-connector').forEach(g => {
+        const lines = g.querySelectorAll('line');
+        if (lines.length === 2) {
+          g.setAttribute('data-orig-y2-0', lines[0].getAttribute('y2'));
+          g.setAttribute('data-orig-y1-1', lines[1].getAttribute('y1'));
+          g.setAttribute('data-orig-y2-1', lines[1].getAttribute('y2'));
+        }
+      });
+
+      // Helper: restore all labels & connectors to their resolved (non-hover) positions
+      function restorePositions() {
+        overlay.querySelectorAll('.pie-chart-label').forEach(lbl => {
+          const orig = lbl.getAttribute('data-orig-top');
+          if (orig) lbl.style.top = orig;
+        });
+        chartDiv.querySelectorAll('.pie-connector').forEach(g => {
+          const lines = g.querySelectorAll('line');
+          if (lines.length === 2) {
+            const y20 = g.getAttribute('data-orig-y2-0');
+            const y11 = g.getAttribute('data-orig-y1-1');
+            const y21 = g.getAttribute('data-orig-y2-1');
+            if (y20) lines[0].setAttribute('y2', y20);
+            if (y11) lines[1].setAttribute('y1', y11);
+            if (y21) lines[1].setAttribute('y2', y21);
+          }
+        });
+      }
+
       // Hide connectors for hover-only items by default
       chartDiv.querySelectorAll('.pie-connector').forEach(g => {
         if (hoverMode) { g.style.display = 'none'; return; }
-        // In always mode, hide connectors for small slices
         const idx = g.getAttribute('data-slice-idx');
         const matchLabel = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
         if (matchLabel && matchLabel.getAttribute('data-is-small') === '1') g.style.display = 'none';
@@ -1908,8 +2022,10 @@ function buildPieChart() {
       svgEl.querySelectorAll('path[data-slice-idx]').forEach(path => {
         path.addEventListener('mouseenter', () => {
           const idx = path.getAttribute('data-slice-idx');
+          // Show hover ring
+          const ring = svgEl.querySelector(`path[data-hover-ring="${idx}"]`);
+          if (ring) ring.style.display = '';
           if (hoverMode) {
-            // Show only hovered
             chartDiv.querySelectorAll('.pie-connector').forEach(g => {
               g.style.display = g.getAttribute('data-slice-idx') === idx ? '' : 'none';
             });
@@ -1921,19 +2037,32 @@ function buildPieChart() {
             const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${idx}"]`);
             const lbl = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
             if (conn) conn.style.display = '';
-            if (lbl) lbl.style.display = '';
+            if (lbl && lbl.style.display === 'none') {
+              lbl.style.display = '';
+              // Re-resolve overlaps on the affected side
+              const side = lbl.classList.contains('pie-chart-label--right') ? 'pie-chart-label--right' : 'pie-chart-label--left';
+              resolveOverlaps(side);
+            }
           }
         });
         path.addEventListener('mouseleave', () => {
           const idx = path.getAttribute('data-slice-idx');
+          // Hide hover ring
+          const ring = svgEl.querySelector(`path[data-hover-ring="${idx}"]`);
+          if (ring) ring.style.display = 'none';
           if (hoverMode) {
             chartDiv.querySelectorAll('.pie-connector').forEach(g => g.style.display = 'none');
             overlay.querySelectorAll('.pie-chart-label').forEach(lbl => lbl.style.display = 'none');
           } else {
-            // Always mode: re-hide small slice labels
+            // Always mode: re-hide small slice labels and restore positions
             const lbl = overlay.querySelector(`.pie-chart-label[data-slice-idx="${idx}"]`);
             const conn = chartDiv.querySelector(`.pie-connector[data-slice-idx="${idx}"]`);
-            if (lbl && lbl.getAttribute('data-is-small') === '1') { lbl.style.display = 'none'; if (conn) conn.style.display = 'none'; }
+            if (lbl && lbl.getAttribute('data-is-small') === '1') {
+              lbl.style.display = 'none';
+              if (conn) conn.style.display = 'none';
+              // Restore original positions for all labels & connectors
+              restorePositions();
+            }
           }
         });
       });
