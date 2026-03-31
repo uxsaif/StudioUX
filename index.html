@@ -791,9 +791,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   <div class="chart-options-drawer">
     <div class="chart-options__header">
       <span class="chart-options__title">Chart Options</span>
-      <button class="chart-options__close" id="chartOptionsClose" aria-label="Close">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="#373737" stroke-width="1.5"/></svg>
-      </button>
+
     </div>
     <div class="chart-options__body">
 
@@ -2125,15 +2123,11 @@ toggleCombineOption();
 // Chart Options drawer toggle
 const overlay = document.getElementById('chartOptionsOverlay');
 const optionsBtn = document.querySelector('.filters-bar__chart-btn[aria-label="Options"]');
-const closeBtn = document.getElementById('chartOptionsClose');
 
 optionsBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   overlay.style.top = optionsBtn.getBoundingClientRect().top + 'px';
   overlay.classList.add('chart-options-overlay--open');
-});
-closeBtn.addEventListener('click', () => {
-  overlay.classList.remove('chart-options-overlay--open');
 });
 overlay.addEventListener('click', (e) => {
   e.stopPropagation();
