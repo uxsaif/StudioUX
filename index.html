@@ -314,12 +314,12 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 .bar-chart-view { display: none; width: 100%; }
 .bar-chart-view--active { display: flex; }
 .bar-chart-cards {
-  display: flex; width: 100%;
+  display: flex; width: 100%; gap: 0;
   background: var(--surface-primary);
 }
 .bar-chart-card {
   flex: 1 0 0; min-width: 0; display: flex; flex-direction: column;
-  gap: var(--space-4); overflow: visible;
+  gap: var(--space-4); overflow: visible; padding-right: 12px;
 }
 .bar-chart-card:last-child {
   overflow: hidden;
@@ -350,7 +350,7 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 }
 
 /* Range scale */
-.bar-chart-card__scale-wrap { padding: 15px 34px 0 0; }
+.bar-chart-card__scale-wrap { padding: 15px 52px 0 0; margin-right: -12px; }
 .bar-chart-card__scale {
   position: relative; height: 8px;
   border-bottom: 1px solid var(--border-default);
@@ -367,7 +367,8 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
 /* Bar rows */
 .bar-chart-row {
   display: flex; flex-direction: column; gap: var(--space-2);
-  padding: var(--space-4) 0 var(--space-2) 0;
+  padding: var(--space-4) 12px var(--space-2) 0;
+  margin-right: -12px;
   border-bottom: 1px solid var(--border-default);
   overflow: visible;
 }
@@ -376,20 +377,19 @@ body { font-family: var(--font-family); color: var(--color-primary); background:
   white-space: nowrap; overflow: visible;
 }
 .bar-chart-row__bar-wrap {
-  display: flex; gap: var(--space-2); align-items: stretch; height: 24px;
-  padding-right: 34px;
+  height: 24px; padding-right: 40px;
 }
 .bar-chart-row__bar-frame {
-  flex: 1 0 0; min-width: 0; display: flex; align-items: center;
+  width: 100%; height: 100%; display: flex; align-items: center; overflow: visible;
 }
 .bar-chart-row__bar {
   height: 100%; background: #675895; border-radius: 0;
-  min-width: 2px; transition: width 0.3s ease;
+  min-width: 2px; transition: width 0.3s ease; flex-shrink: 0;
 }
 .bar-chart-row__value {
-  width: 61px; flex-shrink: 0; display: flex; align-items: center;
+  flex-shrink: 0; display: flex; align-items: center;
   font-size: 13px; font-weight: 700; line-height: 13px;
-  color: #707276; white-space: nowrap;
+  color: #707276; white-space: nowrap; margin-left: 8px;
 }
 .bar-chart-row__sig {
   font-size: 11px; line-height: 11px; color: var(--color-tertiary);
@@ -1245,8 +1245,8 @@ function buildBarChart() {
       if (!showHyphen) {
         html += `<div class="bar-chart-row__bar" style="width:${avg}%;background:${barColor}"></div>`;
       }
-      html += '</div>';
       html += `<span class="bar-chart-row__value" style="color:#707276">${showHyphen ? '---' : fmtPct(avg, opts.valDecimals)}</span>`;
+      html += '</div>';
       html += '</div>';
       html += '<span class="bar-chart-row__sig"></span>';
       html += '</div>';
@@ -1295,8 +1295,8 @@ function buildBarChart() {
       if (!showHyphen) {
         html += `<div class="bar-chart-row__bar" style="width:${val}%;background:${barColor}"></div>`;
       }
-      html += '</div>';
       html += `<span class="bar-chart-row__value" style="color:#707276">${showHyphen ? '---' : fmtPct(val, opts.valDecimals)}</span>`;
+      html += '</div>';
       html += '</div>';
       if (sigLetters && !showHyphen) {
         html += `<span class="bar-chart-row__sig">${esc(sigLetters)}</span>`;
